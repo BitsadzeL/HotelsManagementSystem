@@ -1,5 +1,10 @@
 
 using Hotels.Repository.Data;
+using Hotels.Repository.Implementations;
+using Hotels.Repository.Interfaces;
+using Hotels.Service.Implementations;
+using Hotels.Service.Interfaces;
+using Hotels.Service.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -15,6 +20,12 @@ namespace Hotels.API
                 .AddDbContext<ApplicationDbContext>(options => options
                 .UseSqlServer(builder.Configuration.GetConnectionString("SQLServerLocalConnection"))
                 .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
+
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+            builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+            builder.Services.AddScoped<IHotelService,HotelService>();
+
+
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
