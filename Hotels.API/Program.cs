@@ -22,8 +22,13 @@ namespace Hotels.API
                 .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
+
             builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+            builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
+
+
             builder.Services.AddScoped<IHotelService,HotelService>();
+            builder.Services.AddScoped<IManagerService, ManagerService>();
 
 
             builder.Services.AddControllers();

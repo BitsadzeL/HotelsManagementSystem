@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Hotels.Models.Dtos.Hotel;
 using Hotels.Models.Dtos.Manager;
+using Hotels.Models.Dtos.Managers;
 using Hotels.Models.Entities;
 
 namespace Hotels.Service.Mapping
@@ -23,7 +24,8 @@ namespace Hotels.Service.Mapping
                 .ForMember(dest => dest.Surname, options => options.MapFrom(src => src.Surname))
                 .ForMember(dest => dest.IdNumber, options => options.MapFrom(src => src.IdNumber))
                 .ForMember(dest => dest.Email, options => options.MapFrom(src => src.Email))
-                .ForMember(dest => dest.PhoneNumber, options => options.MapFrom(src => src.PhoneNumber));
+                .ForMember(dest => dest.PhoneNumber, options => options.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.HotelId, options => options.MapFrom(src => src.HotelId));
 
 
             CreateMap<Hotel, HotelGettingDto>()
@@ -41,6 +43,26 @@ namespace Hotels.Service.Mapping
                 .ForMember(dest => dest.Address, options => options.MapFrom(src => src.Address))
                 .ForMember(dest => dest.Rating, options => options.MapFrom(src => src.Rating))
                 .ForMember(dest => dest.Title, options => options.MapFrom(src => src.Title));
+
+
+            CreateMap<ManagerAddingDto, Manager>()
+                .ForMember(dest => dest.Name, options => options.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Surname, options => options.MapFrom(src => src.Surname))
+                .ForMember(dest => dest.IdNumber, options => options.MapFrom(src => src.IdNumber))
+                .ForMember(dest => dest.PhoneNumber, options => options.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Email, options => options.MapFrom(src => src.Email))
+                .ForMember(dest => dest.HotelId, options => options.MapFrom(src => src.HotelId));
+
+            CreateMap<ManagerUpdatingDto, Manager>()
+                .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name, options => options.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Surname, options => options.MapFrom(src => src.Surname))
+                .ForMember(dest => dest.IdNumber, options => options.MapFrom(src => src.IdNumber))
+                .ForMember(dest => dest.PhoneNumber, options => options.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Email, options => options.MapFrom(src => src.Email))
+                .ForMember(dest => dest.HotelId, options => options.MapFrom(src => src.HotelId));
+
+
 
 
         }

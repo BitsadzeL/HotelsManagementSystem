@@ -111,6 +111,10 @@ namespace University.Repository.Data
                     .HasMaxLength(30);
 
 
+                entity.Property(m => m.HotelId)
+                    .HasDefaultValue(null);
+
+
                 entity.HasIndex(m => m.IdNumber).IsUnique();
                 entity.HasIndex(m => m.Email).IsUnique();
                 entity.HasIndex(m => m.PhoneNumber).IsUnique();
