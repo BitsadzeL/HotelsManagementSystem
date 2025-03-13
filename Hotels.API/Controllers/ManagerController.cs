@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace Hotels.API.Controllers
 {
     [ApiController]
-    [Route("api/hotel")]
+    [Route("api/hotel/manager")]
     public class ManagerController : Controller
     {
         private readonly IManagerService _managerService;
@@ -16,21 +16,21 @@ namespace Hotels.API.Controllers
             _managerService = managerService;
         }
 
-        [HttpGet("managers")]
+        [HttpGet]
         public async Task<IActionResult> GetAllManagers()
         {
             var result= await _managerService.GetAllManagers();
             return Ok(result);
         }
 
-        [HttpGet("managers/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetAllManagers([FromRoute] int id)
         {
             var result = await _managerService.GetManager(id);
             return Ok(result);
         }
 
-        [HttpPost("manager")]
+        [HttpPost]
         public async Task<IActionResult> AddNewManager([FromBody] ManagerAddingDto managerAddingDto)
         {
             await _managerService.AddNewManager(managerAddingDto);
@@ -40,7 +40,7 @@ namespace Hotels.API.Controllers
         }
 
 
-        [HttpPut("manager")]
+        [HttpPut]
         public async Task<IActionResult> UpdateManager([FromBody] ManagerUpdatingDto managerUpdatingDto)
         {
             await _managerService.UpdateManager(managerUpdatingDto);
@@ -51,7 +51,7 @@ namespace Hotels.API.Controllers
 
 
 
-        [HttpDelete("manager/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteManager([FromRoute] int id)
         {
             await _managerService.DeleteManager(id);

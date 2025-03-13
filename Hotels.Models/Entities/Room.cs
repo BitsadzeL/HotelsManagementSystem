@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Title { get;set; }
-        public bool IsFree { get;set; }
+        public bool? IsFree { get;set; }
         public float Price { get; set; }
 
 

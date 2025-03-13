@@ -1,4 +1,5 @@
 ﻿using Hotels.Models.Dtos.Manager;
+using Hotels.Models.Dtos.Rooms;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hotels.Models.Dtos.Hotel
@@ -19,6 +20,6 @@ namespace Hotels.Models.Dtos.Hotel
 
 
         
-        //public List<Room> Rooms { get; set; }
+        public List<RoomGettingDto> Rooms { get; set; }
     }
 }

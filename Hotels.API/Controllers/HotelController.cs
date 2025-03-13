@@ -17,8 +17,6 @@ namespace Hotels.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddHotel([FromBody] HotelAddingDto model)
         {
-
-
             await _hotelService.AddNewHotel(model);
             await _hotelService.SaveHotel();
 

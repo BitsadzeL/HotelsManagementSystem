@@ -3,6 +3,7 @@ using Hotels.Models.Dtos.Hotel;
 using Hotels.Models.Entities;
 using Hotels.Repository.Interfaces;
 using Hotels.Service.Interfaces;
+using System.Linq.Expressions;
 
 namespace Hotels.Service.Implementations
 {
@@ -33,7 +34,7 @@ namespace Hotels.Service.Implementations
 
         public async Task<List<HotelGettingDto>> GetAllHotels()
         {
-            List<Hotel> result = await _hotelRepository.GetAllAsync(includeProperties:"Manager");
+            List<Hotel> result = await _hotelRepository.GetAllAsync(includeProperties:"Manager,Rooms");
             var obj = _mapper.Map<List<HotelGettingDto>>(result);
             return obj;
         }

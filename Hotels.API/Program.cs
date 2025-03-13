@@ -30,6 +30,12 @@ namespace Hotels.API
             builder.Services.AddScoped<IHotelService,HotelService>();
             builder.Services.AddScoped<IManagerService, ManagerService>();
 
+            builder.Services.AddScoped<IGuestRepository,GuestRepository>();
+            builder.Services.AddScoped<IGuestService,GuestService>();
+
+            builder.Services.AddScoped<IRoomRepository,RoomRepository>();
+            builder.Services.AddScoped<IRoomService,RoomService>();
+
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
