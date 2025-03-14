@@ -38,5 +38,15 @@ namespace Hotels.API.Controllers
             await _roomService.SaveRoom();
             return Ok();
         }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRoom([FromRoute] int id)
+        {
+            await _roomService.DeleteRoom(id);
+            await _roomService.SaveRoom();
+
+            return Ok();
+        }
     }
 }

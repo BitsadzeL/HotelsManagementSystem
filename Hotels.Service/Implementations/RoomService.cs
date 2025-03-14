@@ -24,9 +24,10 @@ namespace Hotels.Service.Implementations
             await _roomRepository.AddAsync(obj);
         }
 
-        public Task DeleteRoom(int id)
+        public async Task DeleteRoom(int id)
         {
-            throw new NotImplementedException();
+            var roomToDelete = await _roomRepository.GetAsync(x => x.Id == id);
+            _roomRepository.Remove(roomToDelete);
         }
 
         public async Task<List<RoomGettingDto>> GetAllRooms()

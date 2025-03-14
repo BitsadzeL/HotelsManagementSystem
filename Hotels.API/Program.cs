@@ -16,6 +16,9 @@ namespace Hotels.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
+            //
+
             builder.Services
                 .AddDbContext<ApplicationDbContext>(options => options
                 .UseSqlServer(builder.Configuration.GetConnectionString("SQLServerLocalConnection"))
@@ -36,7 +39,7 @@ namespace Hotels.API
             builder.Services.AddScoped<IRoomRepository,RoomRepository>();
             builder.Services.AddScoped<IRoomService,RoomService>();
 
-
+            //
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
