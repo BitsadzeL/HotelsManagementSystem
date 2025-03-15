@@ -1,4 +1,5 @@
 
+using Hotels.API.Middleware;
 using Hotels.Repository.Data;
 using Hotels.Repository.Implementations;
 using Hotels.Repository.Interfaces;
@@ -51,7 +52,7 @@ namespace Hotels.API
 
             var app = builder.Build();
 
-
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.MapOpenApi();
             app.UseHttpsRedirection();
             app.UseAuthorization();

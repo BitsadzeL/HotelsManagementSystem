@@ -4,6 +4,7 @@ using Hotels.Models.Dtos.Managers;
 using Hotels.Models.Entities;
 using Hotels.Repository.Implementations;
 using Hotels.Repository.Interfaces;
+using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 
 namespace Hotels.Service.Implementations
@@ -27,8 +28,13 @@ namespace Hotels.Service.Implementations
 
         public async Task DeleteManager(int id)
         {
-            var ManagerToDelete = await _managerRepository.GetAsync(x => x.Id == id);
-            _managerRepository.Remove(ManagerToDelete);
+            var managerToDelete = await _managerRepository.GetAsync(x => x.Id == id, includeProperties:"Hotel");
+            if(managerToDelete.Hotel is not null)
+            {
+                throw new DeletionNotAllowedException("Manager manages hotel. You can not delete it");
+            }
+
+            _managerRepository.Remove(managerToDelete);
         }
 
         public async Task<List<ManagerGettingDto>> GetAllManagers()

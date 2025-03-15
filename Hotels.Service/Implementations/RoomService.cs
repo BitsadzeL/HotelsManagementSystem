@@ -2,6 +2,7 @@
 using Hotels.Models.Dtos.Rooms;
 using Hotels.Models.Entities;
 using Hotels.Repository.Interfaces;
+using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 
 namespace Hotels.Service.Implementations
@@ -26,7 +27,12 @@ namespace Hotels.Service.Implementations
 
         public async Task DeleteRoom(int id)
         {
-            var roomToDelete = await _roomRepository.GetAsync(x => x.Id == id);
+            var roomToDelete = await _roomRepository.GetAsync(x => x.Id == id, includeProperties:"Reservations");
+
+            if(roomToDelete.Reservations.Any())
+            {
+                throw new DeletionNotAllowedException("Room has active reservations. Unable to delete");
+            }
             _roomRepository.Remove(roomToDelete);
         }
 

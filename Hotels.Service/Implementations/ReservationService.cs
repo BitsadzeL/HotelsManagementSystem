@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Hotels.Models.Dtos.Reservations;
 using Hotels.Models.Entities;
-using Hotels.Repository.Implementations;
 using Hotels.Repository.Interfaces;
+using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 
 namespace Hotels.Service.Implementations
@@ -19,6 +19,14 @@ namespace Hotels.Service.Implementations
         }
         public async Task<int> AddReservation(ReservationAddingDto reservationAddingDto)
         {
+            var currentTime= DateTime.Now;
+            if (reservationAddingDto.CheckIn < currentTime 
+                || reservationAddingDto.CheckOut<currentTime 
+                || reservationAddingDto.CheckOut<reservationAddingDto.CheckIn
+                || reservationAddingDto.CheckIn == reservationAddingDto.CheckOut)
+            {
+                throw new InvalidDateException();
+            }
             var obj=_mapper.Map<Reservation>(reservationAddingDto);
             await _reservationRepository.AddAsync(obj);
             await _reservationRepository.Save();
@@ -27,13 +35,30 @@ namespace Hotels.Service.Implementations
 
         public async Task DeleteReservation(int reservationId)
         {
+            if (reservationId <= 0)
+            {
+                throw new ArgumentException($"Invalid argument passed {reservationId}");
+            }
+
+
             var reservationToDelete= await _reservationRepository.GetAsync(r=>r.Id==reservationId);
+
+            if (reservationToDelete is null)
+            {
+                throw new NotFoundException($"Reservation with id {reservationId} not found");
+            }
             _reservationRepository.Remove(reservationToDelete);
         }
 
         public async Task<List<ReservationGettingDto>> GetAllReservations()
         {
             List<Reservation> reservations=await _reservationRepository.GetAllAsync();
+
+            if (!reservations.Any())
+            {
+                throw new NotFoundException("reservations not found");
+            }
+
             var res=_mapper.Map<List<ReservationGettingDto>>(reservations);
             return res;
 
@@ -43,6 +68,11 @@ namespace Hotels.Service.Implementations
         {
             Reservation reservation = await _reservationRepository.GetAsync(r=>r.Id==reservationId);
 
+            if (reservation is null)
+            {
+                throw new NotFoundException($"Reservation with {reservationId} not found");
+            }
+
             var res = _mapper.Map<ReservationGettingDto>(reservation);
             return res;
         }
@@ -50,6 +80,11 @@ namespace Hotels.Service.Implementations
         public async Task<List<ReservationGettingDto>> GetReservationsOfRoom(int roomId)
         {
             List<Reservation> roomReservations = await _reservationRepository.GetAllAsync(r=>r.RoomId==roomId);
+
+            if (!roomReservations.Any())
+            {
+                throw new NotFoundException($"Room with {roomId} does not have reservations");
+            }
 
             var res=_mapper.Map<List<ReservationGettingDto>>(roomReservations);
             return res;
