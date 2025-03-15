@@ -1,4 +1,6 @@
-﻿namespace Hotels.Models.Dtos.Rooms
+﻿using Hotels.Models.Dtos.Reservations;
+
+namespace Hotels.Models.Dtos.Rooms
 {
     public class RoomGettingDto
     {
@@ -7,5 +9,7 @@
         public bool IsFree { get; set; }
         public float Price { get; set; }
         public int HotelId {  get; set; }
+
+        public List<ReservationGettingDto> Reservations { get; set; }
     }
 }

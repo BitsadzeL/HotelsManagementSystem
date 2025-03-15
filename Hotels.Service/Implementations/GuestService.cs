@@ -31,7 +31,7 @@ namespace Hotels.Service.Implementations
 
         public async Task<List<GuestGettingDto>> GetAllGuests()
         {
-            List<Guest> guests= await _guestRepository.GetAllAsync();
+            List<Guest> guests= await _guestRepository.GetAllAsync(includeProperties:"Bookings");
             var res=_mapper.Map<List<GuestGettingDto>>(guests);
             return res;
         }

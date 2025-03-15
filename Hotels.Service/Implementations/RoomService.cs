@@ -32,7 +32,7 @@ namespace Hotels.Service.Implementations
 
         public async Task<List<RoomGettingDto>> GetAllRooms()
         {
-            List<Room> rooms = await _roomRepository.GetAllAsync();
+            List<Room> rooms = await _roomRepository.GetAllAsync(includeProperties: "Reservations");
             var obj = _mapper.Map<List<RoomGettingDto>>(rooms);
 
             return obj;
@@ -40,7 +40,7 @@ namespace Hotels.Service.Implementations
 
         public async Task<RoomGettingDto> GetSingleRoom(int id)
         {
-            Room room = await _roomRepository.GetAsync(x=>x.Id==id);
+            Room room = await _roomRepository.GetAsync(x=>x.Id==id,includeProperties: "Reservations");
 
             var obj=_mapper.Map<RoomGettingDto>(room);
             return obj;

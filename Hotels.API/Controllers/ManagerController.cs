@@ -20,14 +20,18 @@ namespace Hotels.API.Controllers
         public async Task<IActionResult> GetAllManagers()
         {
             var result= await _managerService.GetAllManagers();
-            return Ok(result);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAllManagers([FromRoute] int id)
         {
             var result = await _managerService.GetManager(id);
-            return Ok(result);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost]
@@ -36,7 +40,9 @@ namespace Hotels.API.Controllers
             await _managerService.AddNewManager(managerAddingDto);
             await _managerService.SaveManager();
 
-            return Ok(managerAddingDto);
+            //post
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, managerAddingDto, 201, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
 
 
@@ -46,7 +52,9 @@ namespace Hotels.API.Controllers
             await _managerService.UpdateManager(managerUpdatingDto);
             await _managerService.SaveManager();
 
-            return Ok(managerUpdatingDto);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, managerUpdatingDto, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
 
 
@@ -57,7 +65,9 @@ namespace Hotels.API.Controllers
             await _managerService.DeleteManager(id);
             await _managerService.SaveManager();
 
-            return NoContent();
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, id, 204, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

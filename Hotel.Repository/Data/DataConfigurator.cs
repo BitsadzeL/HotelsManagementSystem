@@ -132,6 +132,76 @@ namespace University.Repository.Data
                 );
         }
 
+        public static void ConfigureBookings(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Booking>(entity =>
+            {
+                entity.HasKey(b => b.Id);
+                entity.Property(b => b.Id)
+                    .ValueGeneratedOnAdd()
+                    .IsRequired();
+
+                entity.HasOne(b => b.Guest)
+                    .WithMany(g => g.Bookings)
+                    .HasForeignKey(b => b.GuestId);
+
+                entity.HasOne(b => b.Reservation)
+                    .WithMany(r => r.Bookings)
+                    .HasForeignKey(b => b.ReservationId);
+            });
+        }
+
+        public static void ConfigureReservations(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Reservation>(entity =>
+            {
+                entity.HasOne(r => r.Room)
+                    .WithMany(r => r.Reservations)
+                    .HasForeignKey(r => r.RoomId);
+
+                entity.Property(r=>r.CheckIn)
+                    .IsRequired();
+
+                entity.Property(r => r.CheckOut)
+                    .IsRequired();
+
+                entity.Property(r => r.RoomId)
+                    .IsRequired();
+            });
+        }
+
+        public static void ConfigureGuests(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Guest>(entity =>
+            {
+                entity.HasKey(g => g.Id);
+                entity.Property(g => g.Id)
+                    .ValueGeneratedOnAdd()
+                    .IsRequired();
+
+                entity.Property(g => g.Name)
+                    .IsRequired()
+                    .HasMaxLength(30);
+
+                entity.Property(g => g.Surname)
+                    .IsRequired()
+                    .HasMaxLength(30);
+
+                entity.Property(g => g.IdNumber)
+                    .IsRequired()
+                    .HasColumnType("char(11)");
+
+                entity.Property(g => g.PhoneNumber)
+                    .IsRequired();
+
+
+                entity.HasIndex(g => g.IdNumber).IsUnique();
+                entity.HasIndex(g => g.PhoneNumber).IsUnique();
+
+
+            });
+
+        }
         public static void SeedHotels( this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Hotel>().HasData(

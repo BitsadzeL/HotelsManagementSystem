@@ -8,5 +8,7 @@
         public string IdNumber { get; set; }
         public string PhoneNumber { get; set; }
 
+        public List<Booking> Bookings { get; set; }
+
     }
 }

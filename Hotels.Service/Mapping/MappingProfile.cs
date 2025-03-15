@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Hotels.Models.Dtos.Bookings;
 using Hotels.Models.Dtos.Guests;
 using Hotels.Models.Dtos.Hotel;
 using Hotels.Models.Dtos.Manager;
 using Hotels.Models.Dtos.Managers;
+using Hotels.Models.Dtos.Reservations;
 using Hotels.Models.Dtos.Rooms;
 using Hotels.Models.Entities;
 
@@ -73,7 +75,8 @@ namespace Hotels.Service.Mapping
                 .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, options => options.MapFrom(src => src.Title))
                 .ForMember(dest => dest.IsFree, options => options.MapFrom(src => src.IsFree))
-                .ForMember(dest => dest.Price, options => options.MapFrom(src => src.Price));
+                .ForMember(dest => dest.Price, options => options.MapFrom(src => src.Price))
+                .ForMember(dest => dest.Reservations, options => options.MapFrom(src => src.Reservations));
 
 
             CreateMap<RoomAddingDto, Room>()
@@ -90,19 +93,20 @@ namespace Hotels.Service.Mapping
                 .ForMember(dest => dest.HotelId, options => options.MapFrom(src => src.HotelId));
 
 
-           
 
 
 
 
 
-            
+
+
             CreateMap<Guest, GuestGettingDto>()
                 .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, options => options.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Surname, options => options.MapFrom(src => src.Surname))
                 .ForMember(dest => dest.IdNumber, options => options.MapFrom(src => src.IdNumber))
-                .ForMember(dest => dest.PhoneNumber, options => options.MapFrom(src => src.PhoneNumber));
+                .ForMember(dest => dest.PhoneNumber, options => options.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Bookings, options => options.MapFrom(src => src.Bookings));
 
 
             CreateMap<GuestAddingDto,Guest>()
@@ -121,7 +125,52 @@ namespace Hotels.Service.Mapping
 
 
 
-            
+
+            CreateMap<Reservation,ReservationGettingDto>()
+                .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
+                .ForMember(dest => dest.CheckIn, options => options.MapFrom(src => src.CheckIn))
+                .ForMember(dest => dest.CheckOut, options => options.MapFrom(src => src.CheckOut))
+                .ForMember(dest => dest.RoomId, options => options.MapFrom(src => src.RoomId));
+
+            CreateMap<ReservationAddingDto, Reservation>()
+                .ForMember(dest => dest.CheckIn, options => options.MapFrom(src => src.CheckIn))
+                .ForMember(dest => dest.CheckOut, options => options.MapFrom(src => src.CheckOut))
+                .ForMember(dest => dest.RoomId, options => options.MapFrom(src => src.RoomId));
+
+            CreateMap<ReservationUpdatingDto, Reservation>()
+                .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
+                .ForMember(dest => dest.CheckIn, options => options.MapFrom(src => src.CheckIn))
+                .ForMember(dest => dest.CheckOut, options => options.MapFrom(src => src.CheckOut))
+                .ForMember(dest => dest.RoomId, options => options.MapFrom(src => src.RoomId));
+
+
+
+
+
+            CreateMap<Booking,BookingGettingDto>()
+                .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
+                .ForMember(dest => dest.GuestId, options => options.MapFrom(src => src.GuestId))
+                .ForMember(dest => dest.ReservationId, options => options.MapFrom(src => src.ReservationId));
+
+
+            CreateMap<BookingAddingDto, Booking>()
+                .ForMember(dest => dest.GuestId, options => options.MapFrom(src => src.GuestId))
+                .ForMember(dest => dest.ReservationId, options => options.MapFrom(src => src.ReservationId));
+
+            CreateMap<BookingUpdatingDto,Booking>()
+                .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
+                .ForMember(dest => dest.GuestId, options => options.MapFrom(src => src.GuestId))
+                .ForMember(dest => dest.ReservationId, options => options.MapFrom(src => src.ReservationId));
+
+
+
+
+
+
+
+
+
+
 
 
         }

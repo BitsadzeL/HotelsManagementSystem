@@ -15,6 +15,7 @@ namespace Hotels.Repository.Data
         public DbSet<Manager> Managers { get; set; }
         public DbSet<Guest> Guests { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,6 +26,9 @@ namespace Hotels.Repository.Data
             modelBuilder.ConfigureHotels();
             modelBuilder.ConfigureRooms();
             modelBuilder.ConfigureManagers();
+            modelBuilder.ConfigureBookings();
+            modelBuilder.ConfigureReservations();
+            modelBuilder.ConfigureGuests();
 
             modelBuilder.SeedHotels();
             modelBuilder.SeedRooms();

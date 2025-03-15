@@ -13,5 +13,8 @@
         public int HotelId { get; set; }
 
 
+        public List<Reservation> Reservations { get; set; }
+
+
     }
 }

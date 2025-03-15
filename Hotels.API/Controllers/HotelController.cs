@@ -1,4 +1,5 @@
-﻿using Hotels.Models.Dtos.Hotel;
+﻿using Hotels.Models.Dtos.Guests;
+using Hotels.Models.Dtos.Hotel;
 using Hotels.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,22 +20,27 @@ namespace Hotels.API.Controllers
         {
             await _hotelService.AddNewHotel(model);
             await _hotelService.SaveHotel();
-
-            return Ok(model);
+            
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, model, 201, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllHotels()
         {
             var result=await _hotelService.GetAllHotels();
-            return Ok(result);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSingleHotel([FromRoute] int id)
         {
             var result=await _hotelService.GetSingleHotel(id);
-            return Ok(result);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("{id}")]
@@ -42,7 +48,9 @@ namespace Hotels.API.Controllers
         {
             await _hotelService.DeleteHotel(id);
             await _hotelService.SaveHotel();
-            return Accepted();
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, id, 204, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut]
@@ -50,7 +58,9 @@ namespace Hotels.API.Controllers
         {
             await _hotelService.UpdateHotel(model);
             await _hotelService.SaveHotel();
-            return Ok();
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, model, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
         }
     }
 }
