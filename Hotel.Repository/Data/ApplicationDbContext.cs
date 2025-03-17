@@ -30,9 +30,9 @@ namespace Hotels.Repository.Data
             modelBuilder.ConfigureReservations();
             modelBuilder.ConfigureGuests();
 
-            modelBuilder.SeedHotels();
-            modelBuilder.SeedRooms();
-            modelBuilder.SeedManagers();
+            //modelBuilder.SeedHotels();
+            //modelBuilder.SeedRooms();
+            //modelBuilder.SeedManagers();
 
 
         }
