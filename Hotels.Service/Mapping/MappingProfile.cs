@@ -51,6 +51,7 @@ namespace Hotels.Service.Mapping
                 .ForMember(dest => dest.HotelId, options => options.MapFrom(src => src.HotelId));
 
             CreateMap<ManagerAddingDto, Manager>()
+                .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, options => options.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Surname, options => options.MapFrom(src => src.Surname))
                 .ForMember(dest => dest.IdNumber, options => options.MapFrom(src => src.IdNumber))
@@ -110,6 +111,7 @@ namespace Hotels.Service.Mapping
 
 
             CreateMap<GuestAddingDto,Guest>()
+                .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, options => options.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Surname, options => options.MapFrom(src => src.Surname))
                 .ForMember(dest => dest.IdNumber, options => options.MapFrom(src => src.IdNumber))

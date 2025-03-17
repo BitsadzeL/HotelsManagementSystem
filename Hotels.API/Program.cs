@@ -1,4 +1,5 @@
 
+using Hotel.API;
 using Hotels.API.Middleware;
 using Hotels.Repository.Data;
 using Hotels.Repository.Implementations;
@@ -20,32 +21,36 @@ namespace Hotels.API
 
             //
 
-            builder.Services
-                .AddDbContext<ApplicationDbContext>(options => options
-                .UseSqlServer(builder.Configuration.GetConnectionString("SQLServerLocalConnection"))
-                .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
+            //builder.Services
+            //    .AddDbContext<ApplicationDbContext>(options => options
+            //    .UseSqlServer(builder.Configuration.GetConnectionString("SQLServerLocalConnection"))
+            //    .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
 
-            builder.Services.AddAutoMapper(typeof(MappingProfile));
+            //builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-            builder.Services.AddScoped<IHotelRepository, HotelRepository>();
-            builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
+            //builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+            //builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 
 
-            builder.Services.AddScoped<IHotelService,HotelService>();
-            builder.Services.AddScoped<IManagerService, ManagerService>();
+            //builder.Services.AddScoped<IHotelService,HotelService>();
+            //builder.Services.AddScoped<IManagerService, ManagerService>();
 
-            builder.Services.AddScoped<IGuestRepository,GuestRepository>();
-            builder.Services.AddScoped<IGuestService,GuestService>();
+            //builder.Services.AddScoped<IGuestRepository,GuestRepository>();
+            //builder.Services.AddScoped<IGuestService,GuestService>();
 
-            builder.Services.AddScoped<IRoomRepository,RoomRepository>();
-            builder.Services.AddScoped<IRoomService,RoomService>();
+            //builder.Services.AddScoped<IRoomRepository,RoomRepository>();
+            //builder.Services.AddScoped<IRoomService,RoomService>();
 
-            builder.Services.AddScoped<IReservationRepository,ReservationRepository>();
-            builder.Services.AddScoped<IReservationService,ReservationService>();
+            //builder.Services.AddScoped<IReservationRepository,ReservationRepository>();
+            //builder.Services.AddScoped<IReservationService,ReservationService>();
 
-            builder.Services.AddScoped<IBookingRepository,BookingRepository>();
-            builder.Services.AddScoped<IBookingService,BookingService>();
-
+            //builder.Services.AddScoped<IBookingRepository,BookingRepository>();
+            //builder.Services.AddScoped<IBookingService,BookingService>();
+            builder.AddDatabase();
+            builder.AddAutoMapper();
+            builder.AddRepositories();
+            builder.AddServices();
+            builder.AddIdentity();
             //
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -55,6 +60,7 @@ namespace Hotels.API
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.MapOpenApi();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.Run();

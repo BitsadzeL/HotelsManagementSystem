@@ -85,7 +85,7 @@ namespace University.Repository.Data
             {
                 entity.HasKey(m => m.Id);
                 entity.Property(m => m.Id)
-                    .ValueGeneratedOnAdd()
+                    //.ValueGeneratedOnAdd()
                     .IsRequired();
 
                 entity.Property(m => m.Name)
@@ -176,7 +176,7 @@ namespace University.Repository.Data
             {
                 entity.HasKey(g => g.Id);
                 entity.Property(g => g.Id)
-                    .ValueGeneratedOnAdd()
+                    //.ValueGeneratedOnAdd()
                     .IsRequired();
 
                 entity.Property(g => g.Name)
@@ -202,109 +202,111 @@ namespace University.Repository.Data
             });
 
         }
-        public static void SeedHotels( this ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Hotel>().HasData(
-                new Hotel
-                {
-                    Id = 1,
-                    Title = "Grand Plaza",
-                    Rating = 4.5f,
-                    Country = "Georgia",
-                    City = "Tbilisi",
-                    Address = "123 Plaza Ave"
-                },
-                new Hotel
-                {
-                    Id = 2,
-                    Title = "Luxury Inn",
-                    Rating = 4.1f,
-                    Country = "Germany",
-                    City = "Berlin",
-                    Address = "456 Ocean St"
-                },
-                new Hotel
-                {
-                    Id = 3,
-                    Title = "Barcelona Plaza",
-                    Rating = 5.0f,
-                    Country = "Spain",
-                    City = "Barcelona",
-                    Address = "789 Mountain Rd"
-                }
-            );
-        }
+        //public static void SeedHotels( this ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Hotel>().HasData(
+        //        new Hotel
+        //        {
+        //            Id = 1,
+        //            Title = "Grand Plaza",
+        //            Rating = 4.5f,
+        //            Country = "Georgia",
+        //            City = "Tbilisi",
+        //            Address = "123 Plaza Ave"
+        //        },
+        //        new Hotel
+        //        {
+        //            Id = 2,
+        //            Title = "Luxury Inn",
+        //            Rating = 4.1f,
+        //            Country = "Germany",
+        //            City = "Berlin",
+        //            Address = "456 Ocean St"
+        //        },
+        //        new Hotel
+        //        {
+        //            Id = 3,
+        //            Title = "Barcelona Plaza",
+        //            Rating = 5.0f,
+        //            Country = "Spain",
+        //            City = "Barcelona",
+        //            Address = "789 Mountain Rd"
+        //        }
+        //    );
+        //}
 
-        public static void SeedRooms( this ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Room>().HasData(
-               new Room
-               {
-                   Id = 1,
-                   Title = "Deluxe Room",
-                   Price = 150.00f,
-                   HotelId = 1
-               },
-               new Room
-               {
-                   Id = 2,
-                   Title = "Standard Room",
-                   Price = 100.00f,
-                   HotelId = 2
-               },
-               new Room
-               {
-                   Id = 3,
-                   Title = "Suite",
-                   Price = 250.00f,
-                   HotelId = 3
-               },
+        //public static void SeedRooms( this ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Room>().HasData(
+        //       new Room
+        //       {
+        //           Id = 1,
+        //           Title = "Deluxe Room",
+        //           Price = 150.00f,
+        //           HotelId = 1
+        //       },
+        //       new Room
+        //       {
+        //           Id = 2,
+        //           Title = "Standard Room",
+        //           Price = 100.00f,
+        //           HotelId = 2
+        //       },
+        //       new Room
+        //       {
+        //           Id = 3,
+        //           Title = "Suite",
+        //           Price = 250.00f,
+        //           HotelId = 3
+        //       },
 
-               new Room
-               {
-                   Id = 4,
-                   Title = "Royal",
-                   Price = 500.00f,
-                   HotelId = 3
-               }
-           );
-        }
+        //       new Room
+        //       {
+        //           Id = 4,
+        //           Title = "Royal",
+        //           Price = 500.00f,
+        //           HotelId = 3
+        //       }
+        //   );
+        //}
 
-        public static void SeedManagers(this ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Manager>().HasData(
-                new Manager
-                {
-                    Id = 1,
-                    Name = "John",
-                    Surname = "Doe",
-                    IdNumber = "12345678901",
-                    Email = "john.doe@example.com",
-                    PhoneNumber = "+995123456789",
-                    HotelId = 1
-                },
-                new Manager
-                {
-                    Id = 2,
-                    Name = "Jane",
-                    Surname = "Smith",
-                    IdNumber = "98765432101",
-                    Email = "jane.smith@example.com",
-                    PhoneNumber = "+995987654321",
-                    HotelId = 2
-                },
-                new Manager
-                {
-                    Id = 3,
-                    Name = "Michael",
-                    Surname = "Jordan",
-                    IdNumber = "19283746501",
-                    Email = "michael.jordan@example.com",
-                    PhoneNumber = "+995112233445",
-                    HotelId = 3
-                }
-            );
-        }
+        //public static void SeedManagers(this ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Manager>().HasData(
+        //        new Manager
+        //        {
+        //            Id = 1,
+        //            Name = "John",
+        //            Surname = "Doe",
+        //            IdNumber = "12345678901",
+        //            Email = "john.doe@example.com",
+        //            PhoneNumber = "+995123456789",
+        //            HotelId = 1
+        //        },
+        //        new Manager
+        //        {
+        //            Id = 2,
+        //            Name = "Jane",
+        //            Surname = "Smith",
+        //            IdNumber = "98765432101",
+        //            Email = "jane.smith@example.com",
+        //            PhoneNumber = "+995987654321",
+        //            HotelId = 2
+        //        },
+        //        new Manager
+        //        {
+        //            Id = 3,
+        //            Name = "Michael",
+        //            Surname = "Jordan",
+        //            IdNumber = "19283746501",
+        //            Email = "michael.jordan@example.com",
+        //            PhoneNumber = "+995112233445",
+        //            HotelId = 3
+        //        }
+        //    );
+        //}
+
+
 
     }
 }
