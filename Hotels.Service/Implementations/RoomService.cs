@@ -18,6 +18,7 @@ namespace Hotels.Service.Implementations
             _mapper=mapper;
         }
 
+
         public async Task AddNewRoom(RoomAddingDto roomAddingDto)
         {
             var obj=_mapper.Map<Room>(roomAddingDto);

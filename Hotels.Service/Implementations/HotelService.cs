@@ -32,6 +32,19 @@ namespace Hotels.Service.Implementations
             _hotelRepository.Remove(hotelToDelete);
         }
 
+        public async Task<List<HotelGettingDto>> FilterHotels(string country, string city, float? rating)
+        {
+            Expression<Func<Hotel, bool>> filter = h =>
+                (string.IsNullOrEmpty(country) || h.Country == country) &&
+                (string.IsNullOrEmpty(city) || h.City == city) &&
+                (!rating.HasValue || h.Rating >= rating);
+
+            List<Hotel> result = await _hotelRepository.GetAllAsync(filter);
+            var obj = _mapper.Map<List<HotelGettingDto>>(result);
+            return obj;
+        }
+
+
         public async Task<List<HotelGettingDto>> GetAllHotels()
         {
             List<Hotel> result = await _hotelRepository.GetAllAsync(includeProperties:"Manager,Rooms");

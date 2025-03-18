@@ -18,7 +18,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpPost]
-
+        
         public async Task<IActionResult> AddHotel([FromBody] HotelAddingDto model)
         {
             await _hotelService.AddNewHotel(model);
@@ -46,7 +46,9 @@ namespace Hotels.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+
         [HttpDelete("{id}")]
+        
         public async Task<IActionResult> DeleteHotel([FromRoute] int id)
         {
             await _hotelService.DeleteHotel(id);
@@ -57,12 +59,22 @@ namespace Hotels.API.Controllers
         }
 
         [HttpPut]
+        
         public async Task<IActionResult> UpdateHotel([FromBody] HotelUpdatingDto model)
         {
             await _hotelService.UpdateHotel(model);
             await _hotelService.SaveHotel();
 
             ApiResponse response = new(ApiResponseMessage.SuccessMessage, model, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterHotels(string? country, string? city, float? rating)
+        {
+            var result = await _hotelService.FilterHotels(country, city, rating);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
             return StatusCode(response.StatusCode, response);
         }
     }
