@@ -1,6 +1,8 @@
 ﻿using Hotels.Models.Dtos.Guests;
 using Hotels.Models.Dtos.Hotel;
 using Hotels.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotels.API.Controllers
@@ -16,6 +18,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpPost]
+
         public async Task<IActionResult> AddHotel([FromBody] HotelAddingDto model)
         {
             await _hotelService.AddNewHotel(model);

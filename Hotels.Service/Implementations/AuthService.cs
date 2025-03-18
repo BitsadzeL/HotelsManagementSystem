@@ -37,7 +37,7 @@ namespace Hotels.Service.Implementations
         }
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
-            // Find user by username (case-insensitive) - Query IdentityUser<int>
+            
             var user = await _context.Set<IdentityUser<int>>()
                 .FirstOrDefaultAsync(x => x.UserName.ToLower() == loginRequestDto.UserName.ToLower());
 
@@ -46,14 +46,14 @@ namespace Hotels.Service.Implementations
                 throw new NotFoundException($"User {loginRequestDto.UserName} not found");
             }
 
-            // Check if password is valid
+            
             var isValidPassword = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
             if (!isValidPassword)
             {
-                return new LoginResponseDto { Token = string.Empty }; // Return empty token if password is incorrect
+                return new LoginResponseDto { Token = string.Empty }; 
             }
 
-            // Get user roles and generate JWT token
+            
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtTokenGenerator.GenerateToken(user, roles);
 
@@ -107,14 +107,83 @@ namespace Hotels.Service.Implementations
         }
 
 
-        public Task<int> RegisterAdmin(AdminRegistrationDto adminRegistrationRequestDto)
+        public async Task RegisterAdmin(AdminRegistrationDto adminRegistrationRequestDto)
         {
-            throw new NotImplementedException();
+            var user = _mapper.Map<IdentityUser<int>>(adminRegistrationRequestDto);
+
+
+            var result = await _userManager.CreateAsync(user, adminRegistrationRequestDto.Password);
+
+            if (result.Succeeded)
+            {
+
+                var userToReturn = await _userManager.FindByEmailAsync(adminRegistrationRequestDto.Email);
+
+                if (userToReturn != null)
+                {
+
+                    if (!await _roleManager.RoleExistsAsync(_adminRole))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole<int>(_adminRole));
+                    }
+
+
+                    await _userManager.AddToRoleAsync(userToReturn, _adminRole);
+
+
+                    
+                }
+                else
+                {
+
+                    throw new InvalidOperationException("Failed to retrieve the user after registration.");
+                }
+            }
+            else
+            {
+
+                throw new InvalidOperationException(result.Errors.FirstOrDefault()?.Description ?? "An error occurred while registering the user.");
+            }
+        
         }
 
-        public Task<int> RegisterManager(ManagerRegistrationDto managerRegistrationRequestDto)
+        public async Task<int> RegisterManager(ManagerRegistrationDto managerRegistrationRequestDto)
         {
-            throw new NotImplementedException();
+            var user = _mapper.Map<IdentityUser<int>>(managerRegistrationRequestDto);
+
+
+            var result = await _userManager.CreateAsync(user, managerRegistrationRequestDto.Password);
+
+            if (result.Succeeded)
+            {
+
+                var userToReturn = await _userManager.FindByEmailAsync(managerRegistrationRequestDto.Email);
+
+                if (userToReturn != null)
+                {
+
+                    if (!await _roleManager.RoleExistsAsync(_managerRole))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole<int>(_managerRole));
+                    }
+
+
+                    await _userManager.AddToRoleAsync(userToReturn, _managerRole);
+
+
+                    return userToReturn.Id;
+                }
+                else
+                {
+
+                    throw new InvalidOperationException("Failed to retrieve the user after registration.");
+                }
+            }
+            else
+            {
+
+                throw new InvalidOperationException(result.Errors.FirstOrDefault()?.Description ?? "An error occurred while registering the user.");
+            }
         }
     }
 }

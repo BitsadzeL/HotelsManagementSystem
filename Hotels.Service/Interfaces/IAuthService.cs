@@ -6,7 +6,7 @@ namespace Hotels.Service.Interfaces
     {
         Task<int> RegisterGuest(GuestRegistrationDto guestRegistrationRequestDto);
         Task<int> RegisterManager(ManagerRegistrationDto managerRegistrationRequestDto);
-        Task<int> RegisterAdmin(AdminRegistrationDto adminRegistrationRequestDto);
+        Task RegisterAdmin(AdminRegistrationDto adminRegistrationRequestDto);
         Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto);
     }
 }
