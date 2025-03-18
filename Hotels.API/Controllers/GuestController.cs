@@ -1,5 +1,6 @@
 ﻿using Hotels.Models.Dtos.Guests;
 using Hotels.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 

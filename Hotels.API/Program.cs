@@ -51,6 +51,8 @@ namespace Hotels.API
             builder.AddRepositories();
             builder.AddServices();
             builder.AddIdentity();
+            builder.ConfigureJwtOptions();
+            builder.AddAuthentication();
             //
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();

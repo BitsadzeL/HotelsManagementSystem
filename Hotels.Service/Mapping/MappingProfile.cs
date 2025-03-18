@@ -2,11 +2,13 @@
 using Hotels.Models.Dtos.Bookings;
 using Hotels.Models.Dtos.Guests;
 using Hotels.Models.Dtos.Hotel;
+using Hotels.Models.Dtos.Identity;
 using Hotels.Models.Dtos.Manager;
 using Hotels.Models.Dtos.Managers;
 using Hotels.Models.Dtos.Reservations;
 using Hotels.Models.Dtos.Rooms;
 using Hotels.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hotels.Service.Mapping
 {
@@ -169,6 +171,23 @@ namespace Hotels.Service.Mapping
 
 
 
+
+
+
+            CreateMap<GuestRegistrationDto, IdentityUser<int>>()
+                .ForMember(dest => dest.UserName, options => options.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Email, options => options.MapFrom(src => src.Email))
+                .ForMember(dest => dest.NormalizedEmail, options => options.MapFrom(src => src.Email.ToUpper()));
+
+            CreateMap<ManagerRegistrationDto, IdentityUser<int>>()
+                .ForMember(dest => dest.UserName, options => options.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Email, options => options.MapFrom(src => src.Email))
+                .ForMember(dest => dest.NormalizedEmail, options => options.MapFrom(src => src.Email.ToUpper()));
+
+            CreateMap<AdminRegistrationDto, IdentityUser<int>>()
+                .ForMember(dest => dest.UserName, options => options.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Email, options => options.MapFrom(src => src.Email))
+                .ForMember(dest => dest.NormalizedEmail, options => options.MapFrom(src => src.Email.ToUpper()));
 
 
 
