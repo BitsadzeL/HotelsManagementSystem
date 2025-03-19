@@ -7,6 +7,7 @@ namespace Hotels.Service.Interfaces
     {
         Task<RoomGettingDto> GetSingleRoom(int id);
         Task<List<RoomGettingDto>> GetAllRooms();
+        Task<List<RoomGettingDto>> GetAllRoomsOfHotel(int hotelId);
         Task AddNewRoom(RoomAddingDto roomAddingDto);
         Task UpdateRoom(RoomUpdatingDto roomUpdatingDto);
         Task DeleteRoom(int id);

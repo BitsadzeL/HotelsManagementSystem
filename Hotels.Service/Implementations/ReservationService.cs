@@ -81,10 +81,10 @@ namespace Hotels.Service.Implementations
         {
             List<Reservation> roomReservations = await _reservationRepository.GetAllAsync(r=>r.RoomId==roomId);
 
-            if (!roomReservations.Any())
-            {
-                throw new NotFoundException($"Room with {roomId} does not have reservations");
-            }
+            //if (!roomReservations.Any())
+            //{
+            //    throw new NotFoundException($"Room with {roomId} does not have reservations");
+            //}
 
             var res=_mapper.Map<List<ReservationGettingDto>>(roomReservations);
             return res;

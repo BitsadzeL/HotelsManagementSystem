@@ -3,6 +3,7 @@ using Hotels.Models.Dtos.Bookings;
 using Hotels.Models.Dtos.Reservations;
 using Hotels.Models.Entities;
 using Hotels.Repository.Interfaces;
+using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 
 namespace Hotels.Service.Implementations
@@ -21,9 +22,24 @@ namespace Hotels.Service.Implementations
         }
         public async Task AddBooking(BookingWithReservationAddingDto bookingWithReservationDto)
         {
+
+            var existingReservationsOfRoom = await _reservationService.GetReservationsOfRoom(bookingWithReservationDto.RoomId);
+
+
+            foreach (var r in existingReservationsOfRoom)
+            {
+                if ((bookingWithReservationDto.CheckIn >= r.CheckIn && bookingWithReservationDto.CheckIn < r.CheckOut) || 
+                    (bookingWithReservationDto.CheckOut > r.CheckIn && bookingWithReservationDto.CheckOut <= r.CheckOut) || 
+                    (bookingWithReservationDto.CheckIn <= r.CheckIn && bookingWithReservationDto.CheckOut >= r.CheckOut) || 
+                    (bookingWithReservationDto.CheckIn > r.CheckOut && bookingWithReservationDto.CheckIn < r.CheckIn)) 
+                {
+                    throw new DateOverlapException($"Room {bookingWithReservationDto.RoomId} is not available from {bookingWithReservationDto.CheckIn} to {bookingWithReservationDto.CheckOut}.");
+                }
+            }
+
+
             ReservationAddingDto reservationAddingDto = new();
             BookingAddingDto bookingAddingDto = new();
-
 
             //gamovyot Reservation
             reservationAddingDto.CheckIn = bookingWithReservationDto.CheckIn;

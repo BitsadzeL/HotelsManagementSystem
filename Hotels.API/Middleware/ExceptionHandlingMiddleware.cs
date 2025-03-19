@@ -37,6 +37,7 @@ namespace Hotels.API.Middleware
                     response.Result = null;
                     break;
                 case InvalidDateException:
+                case DateOverlapException:
                     response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
                     response.Message = exception.Message;
                     response.IsSuccess = false;

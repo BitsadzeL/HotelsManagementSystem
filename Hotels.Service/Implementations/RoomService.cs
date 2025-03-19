@@ -45,6 +45,14 @@ namespace Hotels.Service.Implementations
             return obj;
         }
 
+        public async Task<List<RoomGettingDto>> GetAllRoomsOfHotel(int hotelId)
+        {
+            List<Room> rooms = await _roomRepository.GetAllAsync(x=>x.HotelId==hotelId,includeProperties: "Reservations");
+            var obj = _mapper.Map<List<RoomGettingDto>>(rooms);
+
+            return obj;
+        }
+
         public async Task<RoomGettingDto> GetSingleRoom(int id)
         {
             Room room = await _roomRepository.GetAsync(x=>x.Id==id,includeProperties: "Reservations");

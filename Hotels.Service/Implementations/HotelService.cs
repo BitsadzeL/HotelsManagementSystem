@@ -11,12 +11,19 @@ namespace Hotels.Service.Implementations
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IMapper _mapper;
+        private readonly IRoomService _roomService;
+        private readonly IManagerService _managerService;
+        private readonly IRoomRepository _roomRepository;
 
-        public HotelService(IHotelRepository hotelRepository, IMapper mapper)
+        public HotelService(IHotelRepository hotelRepository, IMapper mapper, IRoomService roomService, IManagerService managerService,IRoomRepository roomRepository)
         {
             _hotelRepository = hotelRepository;
             _mapper = mapper;
-            
+            _roomService=roomService;
+            _managerService=managerService;
+            _roomRepository = roomRepository;
+
+
         }
 
         public async Task AddNewHotel(HotelAddingDto model)
@@ -29,7 +36,21 @@ namespace Hotels.Service.Implementations
         public async Task DeleteHotel(int id)
         {
             var hotelToDelete= await _hotelRepository.GetAsync(x=>x.Id==id);
+
+
+            var roomsOfHotel = await _roomRepository.GetAllAsync(x=>x.HotelId==id);
+            foreach (var room in roomsOfHotel)
+            {
+                await _roomService.DeleteRoom(room.Id);
+            }
+            await _roomService.SaveRoom();
             _hotelRepository.Remove(hotelToDelete);
+
+
+            var managerToDelete = await _managerService.GetManagerOfHotel(id);
+            await _managerService.DeleteManager(managerToDelete.Id);
+            await _managerService.SaveManager();
+
         }
 
         public async Task<List<HotelGettingDto>> FilterHotels(string country, string city, float? rating)

@@ -6,6 +6,7 @@ namespace Hotels.Service.Interfaces
     public interface IManagerService
     {
         Task<ManagerGettingDto> GetManager(int id);
+        Task<ManagerGettingDto> GetManagerOfHotel(int hotelId);
         Task<List<ManagerGettingDto>> GetAllManagers();
         Task AddNewManager(ManagerAddingDto managerAddingDto);
         Task UpdateManager(ManagerUpdatingDto managerUpdatingDto);
