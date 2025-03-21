@@ -18,7 +18,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         public async Task<IActionResult> AddHotel([FromBody] HotelAddingDto model)
         {
             await _hotelService.AddNewHotel(model);

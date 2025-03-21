@@ -6,22 +6,37 @@ using Hotels.Repository.Interfaces;
 using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 
+
+
+
 namespace Hotels.Service.Implementations
 {
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _bookingRepository;
         private readonly IReservationService _reservationService;
+        private readonly IRoomService _roomService;
         private readonly IMapper _mapper;
 
-        public BookingService(IBookingRepository bookingRepository, IMapper mapper, IReservationService reservationService)
+        public BookingService(IBookingRepository bookingRepository, 
+            IMapper mapper, 
+            IReservationService reservationService, 
+            IRoomService roomService)
         {
             _bookingRepository = bookingRepository;
             _mapper = mapper;
             _reservationService = reservationService;
+            _roomService= roomService;
         }
         public async Task AddBooking(BookingWithReservationAddingDto bookingWithReservationDto)
         {
+
+            var roomToReserve = await _roomService.GetSingleRoom(bookingWithReservationDto.RoomId);
+            if(roomToReserve.IsFree == false)
+            {
+                throw new RoomUnavailableException($"Room with id {bookingWithReservationDto.RoomId} is not available to reserve");
+            }
+
 
             var existingReservationsOfRoom = await _reservationService.GetReservationsOfRoom(bookingWithReservationDto.RoomId);
 

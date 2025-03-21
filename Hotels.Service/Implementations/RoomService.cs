@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using Hotels.Models.Dtos.Hotel;
 using Hotels.Models.Dtos.Rooms;
 using Hotels.Models.Entities;
+using Hotels.Repository.Implementations;
 using Hotels.Repository.Interfaces;
 using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
-
+using Microsoft.Identity.Client;
+using System.Linq.Expressions;
+//saastumro,xelmisawvdomoba,fasisdiapazoni
 namespace Hotels.Service.Implementations
 {
     public class RoomService :IRoomService
@@ -21,6 +25,11 @@ namespace Hotels.Service.Implementations
 
         public async Task AddNewRoom(RoomAddingDto roomAddingDto)
         {
+
+            if (roomAddingDto.Price < 0)
+            {
+                throw new ArgumentException("Price must not be negative");
+            }
             var obj=_mapper.Map<Room>(roomAddingDto);
 
             await _roomRepository.AddAsync(obj);
@@ -61,6 +70,26 @@ namespace Hotels.Service.Implementations
             return obj;
         }
 
+
+        public async Task<List<RoomGettingDto>> FilterRooms(int? hotelid, string? isavailable, float? minprice, float? maxprice)
+        {
+            bool? isAvailableBool = null;
+            if (!string.IsNullOrEmpty(isavailable) && bool.TryParse(isavailable, out bool parsedIsAvailable))
+            {
+                isAvailableBool = parsedIsAvailable;
+            }
+
+            Expression<Func<Room, bool>> filter = r =>
+                (!isAvailableBool.HasValue || r.IsFree == isAvailableBool.Value) &&
+                (!hotelid.HasValue || r.HotelId == hotelid) &&
+                (!minprice.HasValue || r.Price >= minprice) &&
+                (!maxprice.HasValue || r.Price <= maxprice);
+
+            var result = await _roomRepository.GetAllAsync(filter);
+            return _mapper.Map<List<RoomGettingDto>>(result);
+        }
+
+
         public async Task SaveRoom()
         {
             await _roomRepository.Save();
@@ -71,7 +100,14 @@ namespace Hotels.Service.Implementations
             throw new NotImplementedException();
         }
 
+        public async Task ChangeStatus(int roomId)
+        {
+            var roomToChange = await _roomRepository.GetAsync(x=>x.Id == roomId);
 
+            roomToChange.IsFree = !roomToChange.IsFree;
+
+
+        }
     }
    
 }

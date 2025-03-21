@@ -4,6 +4,7 @@ using Hotels.Models.Entities;
 using Hotels.Repository.Interfaces;
 using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
+using Microsoft.Identity.Client;
 
 namespace Hotels.Service.Implementations
 {
@@ -11,11 +12,13 @@ namespace Hotels.Service.Implementations
     {
         private readonly IReservationRepository _reservationRepository;
         private readonly IMapper _mapper;
+        //private readonly IBookingService _bookingService;
 
         public ReservationService(IReservationRepository reservationRepository, IMapper mapper)
         {
             _reservationRepository = reservationRepository;
             _mapper=mapper;
+            //_bookingService=bookingService;
         }
         public async Task<int> AddReservation(ReservationAddingDto reservationAddingDto)
         {
@@ -50,6 +53,24 @@ namespace Hotels.Service.Implementations
             _reservationRepository.Remove(reservationToDelete);
         }
 
+        public async Task<List<ReservationGettingDto>> GetActiveReservations()
+        {
+            var currentDate = DateTime.Now;
+            var result = await _reservationRepository.GetAllAsync(r => r.CheckOut >= currentDate);
+
+            var obj = _mapper.Map<List<ReservationGettingDto>>(result);
+            return obj;
+        }
+
+        public async Task<List<ReservationGettingDto>> GetCompletedReservations()
+        {
+            var currentDate= DateTime.Now;
+            var result = await _reservationRepository.GetAllAsync(r => r.CheckOut <= currentDate);
+
+            var obj = _mapper.Map<List<ReservationGettingDto>>(result);
+            return obj;
+        }
+
         public async Task<List<ReservationGettingDto>> GetAllReservations()
         {
             List<Reservation> reservations=await _reservationRepository.GetAllAsync();
@@ -64,6 +85,8 @@ namespace Hotels.Service.Implementations
 
         }
 
+
+
         public async Task<ReservationGettingDto> GetReservation(int reservationId)
         {
             Reservation reservation = await _reservationRepository.GetAsync(r=>r.Id==reservationId);
@@ -77,17 +100,27 @@ namespace Hotels.Service.Implementations
             return res;
         }
 
+        public async Task<List<ReservationGettingDto>> GetReservationsOfGuest(int guestId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ReservationGettingDto>> GetReservationsOfHotel(int hotelId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<ReservationGettingDto>> GetReservationsOfRoom(int roomId)
         {
             List<Reservation> roomReservations = await _reservationRepository.GetAllAsync(r=>r.RoomId==roomId);
 
-            //if (!roomReservations.Any())
-            //{
-            //    throw new NotFoundException($"Room with {roomId} does not have reservations");
-            //}
-
             var res=_mapper.Map<List<ReservationGettingDto>>(roomReservations);
             return res;
+        }
+
+        public Task<List<ReservationGettingDto>> GetReservationsWithDate(DateTime? start, DateTime? end)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task SaveReservation()

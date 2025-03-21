@@ -15,6 +15,6 @@
 
         //Manager manages 1 hotel 1:1
         public Hotel Hotel { get; set; }
-        public int HotelId { get; set; }
+        public int? HotelId { get; set; }
     }
 }

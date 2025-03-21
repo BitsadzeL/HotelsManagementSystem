@@ -37,6 +37,16 @@ namespace Hotels.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterRooms([FromQuery] int? hotelid, [FromQuery] string? isavailable, [FromQuery] float? minprice, [FromQuery] float? maxprice)
+        {
+            var result =  await _roomService.FilterRooms(hotelid, isavailable, minprice, maxprice);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
+
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> AddRoom([FromBody] RoomAddingDto roomAddingDto)
@@ -58,6 +68,18 @@ namespace Hotels.API.Controllers
 
             ApiResponse response = new(ApiResponseMessage.SuccessMessage, id, 204, isSuccess: true);
             return StatusCode(response.StatusCode, response);
+        }
+
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStatus([FromRoute] int id)
+        {
+            await _roomService.ChangeStatus(id);
+            await _roomService.SaveRoom();
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, id, 204, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
+
         }
 
 

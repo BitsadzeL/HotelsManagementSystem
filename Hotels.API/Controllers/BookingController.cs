@@ -36,6 +36,25 @@ namespace Hotels.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("completed")]
+        public async Task<IActionResult> GetCompletedReservations()
+        {
+            var result = await _reservationService.GetCompletedReservations();
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
+        }
+
+
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActiveReservations()
+        {
+            var result = await _reservationService.GetActiveReservations();
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> AddBooking(BookingWithReservationAddingDto bookingWithReservationDto)

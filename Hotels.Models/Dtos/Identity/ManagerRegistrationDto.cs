@@ -19,7 +19,7 @@ namespace Hotels.Models.Dtos.Identity
         public string PhoneNumber { get; set; }
 
         // Hotel Information (Hotel ID is required)
-        public int HotelId { get; set; }
+        public int? HotelId { get; set; }
     }
 
 }

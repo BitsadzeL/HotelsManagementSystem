@@ -59,7 +59,7 @@ namespace Hotels.API.Controllers
                 IdNumber=managerRegistrationDto.IdNumber, 
                 Email=managerRegistrationDto.Email,
                 PhoneNumber=managerRegistrationDto.PhoneNumber,
-                HotelId=managerRegistrationDto.HotelId,
+                HotelId= (int)(managerRegistrationDto.HotelId ?? null),
 
             };
 

@@ -3,6 +3,7 @@ using Hotels.Models.Dtos.Hotel;
 using Hotels.Models.Entities;
 using Hotels.Repository.Interfaces;
 using Hotels.Service.Interfaces;
+using Microsoft.Identity.Client;
 using System.Linq.Expressions;
 
 namespace Hotels.Service.Implementations
@@ -28,6 +29,10 @@ namespace Hotels.Service.Implementations
 
         public async Task AddNewHotel(HotelAddingDto model)
         {
+            if(model.Rating <0 || model.Rating > 5)
+            {
+                throw new ArgumentException("Hotel rating must be in range 0-5");
+            }
 
             var obj=_mapper.Map<Hotel>(model);
             await _hotelRepository.AddAsync(obj);
