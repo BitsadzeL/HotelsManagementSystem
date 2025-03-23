@@ -3,6 +3,7 @@ using Hotels.Models.Dtos.Guests;
 using Hotels.Models.Entities;
 using Hotels.Repository.Data;
 using Hotels.Repository.Interfaces;
+using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 
 namespace Hotels.Service.Implementations
@@ -11,22 +12,33 @@ namespace Hotels.Service.Implementations
     {
         private readonly IGuestRepository _guestRepository;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public GuestService(IGuestRepository guestRepository, IMapper mapper)
+        public GuestService(IGuestRepository guestRepository, IMapper mapper, IAuthService authService)
         {
             _guestRepository = guestRepository;
             _mapper = mapper;
+            _authService=authService;
         }
         public async Task AddGuest(GuestAddingDto guestAddingDto)
         {
             var obj=_mapper.Map<Guest>(guestAddingDto);
+
+
+
             await _guestRepository.AddAsync(obj);
         }
 
         public async Task DeleteGuest(int id)
         {
-            var guestToRemove=await _guestRepository.GetAsync(x=>x.Id==id);
+            var guestToRemove=await _guestRepository.GetAsync(x=>x.Id==id, includeProperties:"Bookings");
+
+            if(guestToRemove.Bookings.Any())
+            {
+                throw new DeletionNotAllowedException("This guest can not be deleted, because of having active bookings");
+            }
              _guestRepository.Remove(guestToRemove);
+            await _authService.DeleteIdentityUser(id);
         }
 
         public async Task<List<GuestGettingDto>> GetAllGuests()

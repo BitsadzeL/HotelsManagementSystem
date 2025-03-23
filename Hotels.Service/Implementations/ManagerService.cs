@@ -37,6 +37,12 @@ namespace Hotels.Service.Implementations
             _managerRepository.Remove(managerToDelete);
         }
 
+        public async Task DeleteManagerWithHotel(int id)
+        {
+            var managerToDelete = await _managerRepository.GetAsync(x => x.Id == id, includeProperties: "Hotel");
+            _managerRepository.Remove(managerToDelete);
+        }
+
         public async Task<List<ManagerGettingDto>> GetAllManagers()
         {
             List<Manager> managers=await _managerRepository.GetAllAsync();

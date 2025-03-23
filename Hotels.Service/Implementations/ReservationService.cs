@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Hotels.Models.Dtos.Reservations;
 using Hotels.Models.Entities;
+using Hotels.Repository.Implementations;
 using Hotels.Repository.Interfaces;
 using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 using Microsoft.Identity.Client;
+using System.Linq.Expressions;
 
 namespace Hotels.Service.Implementations
 {
@@ -12,13 +14,13 @@ namespace Hotels.Service.Implementations
     {
         private readonly IReservationRepository _reservationRepository;
         private readonly IMapper _mapper;
-        //private readonly IBookingService _bookingService;
+
 
         public ReservationService(IReservationRepository reservationRepository, IMapper mapper)
         {
             _reservationRepository = reservationRepository;
             _mapper=mapper;
-            //_bookingService=bookingService;
+
         }
         public async Task<int> AddReservation(ReservationAddingDto reservationAddingDto)
         {
@@ -100,10 +102,14 @@ namespace Hotels.Service.Implementations
             return res;
         }
 
-        public async Task<List<ReservationGettingDto>> GetReservationsOfGuest(int guestId)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<List<ReservationGettingDto>> GetReservationsOfGuest(int guestId)
+        //{
+
+        //    var reservations = await _reservationRepository.GetAllAsync( r => Id.Contains(r.Id));
+
+        //    return _mapper.Map<List<ReservationGettingDto>>(reservations);
+
+        //}
 
         public Task<List<ReservationGettingDto>> GetReservationsOfHotel(int hotelId)
         {
@@ -118,10 +124,18 @@ namespace Hotels.Service.Implementations
             return res;
         }
 
-        public Task<List<ReservationGettingDto>> GetReservationsWithDate(DateTime? start, DateTime? end)
+        public async Task<List<ReservationGettingDto>> GetReservationsWithDate(DateTime? start, DateTime? end)
         {
-            throw new NotImplementedException();
+            Expression<Func<Reservation, bool>> filter = r =>
+                (!start.HasValue || r.CheckIn >= start) &&
+                (!end.HasValue || r.CheckOut <= end);
+
+            var res = await _reservationRepository.GetAllAsync(filter);
+
+            var obj = _mapper.Map<List<ReservationGettingDto>>(res);
+            return obj;
         }
+
 
         public async Task SaveReservation()
         {
@@ -130,6 +144,32 @@ namespace Hotels.Service.Implementations
 
         public async Task UpdateReservation(ReservationUpdatingDto reservationUpdatingDto)
         {
+            bool isOverlapping = false;
+
+            var currentTime = DateTime.Now;
+            if (reservationUpdatingDto.CheckIn < currentTime
+                || reservationUpdatingDto.CheckOut < currentTime
+                || reservationUpdatingDto.CheckOut < reservationUpdatingDto.CheckIn
+                || reservationUpdatingDto.CheckIn == reservationUpdatingDto.CheckOut)
+            {
+                throw new InvalidDateException();
+            }
+
+
+            var existingReservationsOfRoom = await _reservationRepository.GetAllAsync(x=>x.RoomId == reservationUpdatingDto.Id && x.Id != reservationUpdatingDto.Id);
+
+
+
+
+            foreach (var r in existingReservationsOfRoom)
+            {
+                if ((reservationUpdatingDto.CheckIn < r.CheckOut && reservationUpdatingDto.CheckOut > r.CheckIn))
+                {
+                    isOverlapping = true;
+                    throw new DateOverlapException($"Room {reservationUpdatingDto.RoomId} is not available from {reservationUpdatingDto.CheckIn} to {reservationUpdatingDto.CheckOut}.");
+                }
+            }
+
             var reservationToUpdate = await _reservationRepository.GetAsync(r=>r.Id == reservationUpdatingDto.Id);
 
             _mapper.Map(reservationUpdatingDto, reservationToUpdate);

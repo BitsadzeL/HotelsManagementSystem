@@ -1,9 +1,14 @@
 ﻿using Hotels.Models.Dtos.Bookings;
+using Hotels.Models.Dtos.Reservations;
 
 namespace Hotels.Service.Interfaces
 {
     public interface IBookingService
     {
+        Task<List<ReservationGettingDto>> GetReservationsOfGuest(int guestId);
+
+
+        //
         Task<BookingGettingDto> GetSingleBooking(int id);
         Task<List<BookingGettingDto>> GetAllBookings();
 

@@ -108,6 +108,26 @@ namespace Hotels.Service.Implementations
             return obj;
         }
 
+        public async Task<List<ReservationGettingDto>> GetReservationsOfGuest(int guestId)
+        {
+            //bookingebidan avige is idebi, romelic am useris aris
+            var reservationIds = await _bookingRepository.GetBookingIdsByGuestIdAsync(guestId);
+
+            //avige is reservaciebi, romelta aidebic aris zeda listshi
+            List<ReservationGettingDto> result = new();
+
+            foreach (var reservation in reservationIds)
+            {
+                var reserve = await _reservationService.GetReservation(reservation);
+                result.Add(reserve);
+            }
+
+
+            return result;
+
+
+        }
+
         public Task<BookingGettingDto> GetSingleBooking(int id)
         {
             throw new NotImplementedException();
@@ -118,7 +138,9 @@ namespace Hotels.Service.Implementations
             await _bookingRepository.Save();
         }
 
-        public Task UpdateBooking(BookingUpdatingDto bookingUpdatingDto)
+
+
+        public async Task UpdateBooking(BookingUpdatingDto bookingUpdatingDto)
         {
             throw new NotImplementedException();
         }

@@ -144,11 +144,13 @@ namespace University.Repository.Data
 
                 entity.HasOne(b => b.Guest)
                     .WithMany(g => g.Bookings)
-                    .HasForeignKey(b => b.GuestId);
+                    .HasForeignKey(b => b.GuestId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(b => b.Reservation)
                     .WithMany(r => r.Bookings)
-                    .HasForeignKey(b => b.ReservationId);
+                    .HasForeignKey(b => b.ReservationId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
 

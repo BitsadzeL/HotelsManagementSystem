@@ -8,5 +8,6 @@ namespace Hotels.Service.Interfaces
         Task<int> RegisterManager(ManagerRegistrationDto managerRegistrationRequestDto);
         Task RegisterAdmin(AdminRegistrationDto adminRegistrationRequestDto);
         Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto);
+        Task DeleteIdentityUser(int id);
     }
 }

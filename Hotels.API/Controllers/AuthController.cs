@@ -23,9 +23,8 @@ namespace Hotels.API.Controllers
 
         [HttpPost("registerguest")]
         public async Task<IActionResult> RegisterGuest([FromForm] GuestRegistrationDto guestRegistrationDto)
-
         {
-            var result = await  _authService.RegisterGuest(guestRegistrationDto);
+            var result = await _authService.RegisterGuest(guestRegistrationDto);
 
             GuestAddingDto guestAddingDto = new GuestAddingDto()
             { 

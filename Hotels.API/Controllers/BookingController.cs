@@ -56,6 +56,29 @@ namespace Hotels.API.Controllers
         }
 
 
+
+        //stumris reservationebi
+        [HttpGet("ofguest/{guestid}")]
+        public async Task<IActionResult> GetReservationsOfGuest([FromRoute] int guestId)
+        {
+            var result = await _bookingService.GetReservationsOfGuest(guestId);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("filterbydate")]
+        public async Task<IActionResult> FilteByDate([FromQuery] DateTime? start,  [FromQuery] DateTime? end)
+        {
+            var result = await _reservationService.GetReservationsWithDate(start, end);
+
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, result, 200, isSuccess: true);
+            return StatusCode(response.StatusCode, response);
+
+        }
+
+
+
         [HttpPost]
         public async Task<IActionResult> AddBooking(BookingWithReservationAddingDto bookingWithReservationDto)
         {

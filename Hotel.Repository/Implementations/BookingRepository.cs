@@ -14,6 +14,14 @@ namespace Hotels.Repository.Implementations
             _context = context; 
         }
 
+        public async Task<List<int>> GetBookingIdsByGuestIdAsync(int guestId)
+        {
+            return await _context.Bookings
+                .Where(b => b.GuestId == guestId)
+                .Select(b => b.Id)
+                .ToListAsync();
+        }
+
         public async Task Save()
         {
             await _context.SaveChangesAsync();

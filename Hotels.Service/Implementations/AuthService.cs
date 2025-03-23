@@ -185,5 +185,27 @@ namespace Hotels.Service.Implementations
                 throw new InvalidOperationException(result.Errors.FirstOrDefault()?.Description ?? "An error occurred while registering the user.");
             }
         }
+
+        public async Task DeleteIdentityUser(int id)
+        {
+            
+            var user = await _userManager.FindByIdAsync(id.ToString());
+
+            
+            if (user == null)
+            {
+                throw new NotFoundException($"User with ID {id} not found.");
+            }
+
+            
+            var result = await _userManager.DeleteAsync(user);
+
+            
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Failed to delete user: {errors}");
+            }
+        }
     }
 }

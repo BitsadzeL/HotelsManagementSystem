@@ -53,7 +53,7 @@ namespace Hotels.Service.Implementations
 
 
             var managerToDelete = await _managerService.GetManagerOfHotel(id);
-            await _managerService.DeleteManager(managerToDelete.Id);
+            await _managerService.DeleteManagerWithHotel(managerToDelete.Id);
             await _managerService.SaveManager();
 
         }

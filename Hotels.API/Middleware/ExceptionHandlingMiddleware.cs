@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Hotels.Service.Exceptions;
+using Microsoft.EntityFrameworkCore;
 namespace Hotels.API.Middleware
 {
     public class ExceptionHandlingMiddleware
@@ -40,6 +41,16 @@ namespace Hotels.API.Middleware
                 case DateOverlapException:
                     response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
                     response.Message = exception.Message;
+                    response.IsSuccess = false;
+                    response.Result = null;
+                    break;
+
+
+
+
+                case DbUpdateException dbEx:
+                    response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+                    response.Message = "Database error: A unique constraint violation occurred.";
                     response.IsSuccess = false;
                     response.Result = null;
                     break;

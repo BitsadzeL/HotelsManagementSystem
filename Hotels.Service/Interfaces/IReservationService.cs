@@ -8,7 +8,7 @@ namespace Hotels.Service.Interfaces
         Task<ReservationGettingDto> GetReservation(int reservationId);
 
         Task<List<ReservationGettingDto>> GetReservationsOfHotel(int hotelId);
-        Task<List<ReservationGettingDto>> GetReservationsOfGuest(int guestId);
+        //Task<List<ReservationGettingDto>> GetReservationsOfGuest(int guestId);
         Task<List<ReservationGettingDto>> GetReservationsOfRoom(int roomId);
         Task<List<ReservationGettingDto>> GetReservationsWithDate(DateTime? start, DateTime? end);
 
