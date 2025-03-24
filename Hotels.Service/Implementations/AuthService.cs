@@ -5,6 +5,7 @@ using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Hotels.Service.Implementations
 {
@@ -16,6 +17,7 @@ namespace Hotels.Service.Implementations
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IMapper _mapper;
+        private readonly IGuestService _guestService;
 
         private const string _adminRole = "Admin";
         private const string _customerRole = "Customer";
@@ -27,13 +29,15 @@ namespace Hotels.Service.Implementations
             UserManager<IdentityUser<int>> userManager,
             RoleManager<IdentityRole<int>> roleManager,
             IJwtTokenGenerator jwtTokenGenerator,
-            IMapper mapper)
+            IMapper mapper,
+            IGuestService guestService)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _guestService = guestService;
         }
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
@@ -71,7 +75,22 @@ namespace Hotels.Service.Implementations
             
             var user = _mapper.Map<IdentityUser<int>>(guestRegistrationRequestDto);
 
-           
+
+
+            //aqedan
+            var idNumber = guestRegistrationRequestDto.IdNumber;
+            var phoneNumber = guestRegistrationRequestDto.PhoneNumber;
+
+            var idNumbers = await _guestService.GetIdNumbersAsync();
+            var phoneNumbers = await _guestService.GetPhoneNumbersAsync();
+
+            if (idNumbers.Contains(idNumber) || phoneNumbers.Contains(phoneNumber))
+            {
+                throw new DuplicateException("User with this Id number or phone number already exists");
+            }
+
+            //aqamde
+
             var result = await _userManager.CreateAsync(user, guestRegistrationRequestDto.Password);
 
             if (result.Succeeded)

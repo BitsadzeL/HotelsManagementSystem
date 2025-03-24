@@ -30,5 +30,17 @@ namespace Hotels.Repository.Implementations
                 entityFromDb.PhoneNumber = entity.PhoneNumber;
             }
         }
+
+
+        public async Task<List<string>> GetGuestPhoneNumbersAsync()
+        {
+            return await _context.Guests.Select(g => g.PhoneNumber).ToListAsync();
+        }
+
+        public async Task<List<string>> GetGuestIdNumbersAsync()
+        {
+            return await _context.Guests.Select(g=>g.IdNumber).ToListAsync();
+        }
+
     }
 }

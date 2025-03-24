@@ -7,6 +7,11 @@ namespace Hotels.Service.Interfaces
         Task<List<GuestGettingDto>> GetAllGuests();
         Task<GuestGettingDto> GetGuest(int id);
 
+        Task<List<string>> GetPhoneNumbersAsync();
+        Task<List<string>> GetIdNumbersAsync();
+
+
+
         Task AddGuest(GuestAddingDto guestAddingDto);
         Task UpdateGuest(GuestUpdatingDto guestUpdatingDto);
 

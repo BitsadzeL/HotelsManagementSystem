@@ -12,13 +12,13 @@ namespace Hotels.Service.Implementations
     {
         private readonly IGuestRepository _guestRepository;
         private readonly IMapper _mapper;
-        private readonly IAuthService _authService;
+        //private readonly IAuthService _authService;
 
-        public GuestService(IGuestRepository guestRepository, IMapper mapper, IAuthService authService)
+        public GuestService(IGuestRepository guestRepository, IMapper mapper)
         {
             _guestRepository = guestRepository;
             _mapper = mapper;
-            _authService=authService;
+            //_authService=authService;
         }
         public async Task AddGuest(GuestAddingDto guestAddingDto)
         {
@@ -38,7 +38,7 @@ namespace Hotels.Service.Implementations
                 throw new DeletionNotAllowedException("This guest can not be deleted, because of having active bookings");
             }
              _guestRepository.Remove(guestToRemove);
-            await _authService.DeleteIdentityUser(id);
+            //await _authService.DeleteIdentityUser(id);
         }
 
         public async Task<List<GuestGettingDto>> GetAllGuests()
@@ -53,6 +53,18 @@ namespace Hotels.Service.Implementations
             var result = await _guestRepository.GetAsync(c=>c.Id==id);
             var obj = _mapper.Map<GuestGettingDto>(result);
             return obj;
+        }
+
+        public async Task<List<string>> GetIdNumbersAsync()
+        {
+            var result = await _guestRepository.GetGuestIdNumbersAsync();
+            return result;
+        }
+
+        public async Task<List<string>> GetPhoneNumbersAsync()
+        {
+            var result = await _guestRepository.GetGuestPhoneNumbersAsync();
+            return result;
         }
 
         public async Task SaveGuest()

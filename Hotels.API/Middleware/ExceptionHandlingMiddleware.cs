@@ -45,6 +45,13 @@ namespace Hotels.API.Middleware
                     response.Result = null;
                     break;
 
+                case DuplicateException:
+                    response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+                    response.Message = exception.Message;
+                    response.IsSuccess = false;
+                    response.Result = null;
+                    break;
+
 
 
 
