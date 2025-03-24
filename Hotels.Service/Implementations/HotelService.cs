@@ -14,15 +14,15 @@ namespace Hotels.Service.Implementations
         private readonly IMapper _mapper;
         private readonly IRoomService _roomService;
         private readonly IManagerService _managerService;
-        private readonly IRoomRepository _roomRepository;
+        //private readonly IRoomRepository _roomRepository;
 
-        public HotelService(IHotelRepository hotelRepository, IMapper mapper, IRoomService roomService, IManagerService managerService,IRoomRepository roomRepository)
+        public HotelService(IHotelRepository hotelRepository, IMapper mapper, IRoomService roomService, IManagerService managerService)
         {
             _hotelRepository = hotelRepository;
             _mapper = mapper;
             _roomService=roomService;
             _managerService=managerService;
-            _roomRepository = roomRepository;
+            //_roomRepository = roomRepository;
 
 
         }
@@ -43,18 +43,28 @@ namespace Hotels.Service.Implementations
             var hotelToDelete= await _hotelRepository.GetAsync(x=>x.Id==id);
 
 
-            var roomsOfHotel = await _roomRepository.GetAllAsync(x=>x.HotelId==id);
+            //sastumros otaxebis wamogheba da am otaxebis washla miuxedavad imisa aqvs tu ara javshani
+            //var roomsOfHotel = await _roomRepository.GetAllAsync(x=>x.HotelId == id, includeProperties:"Reservations");
+            var roomsOfHotel = await _roomService.GetAllRoomsOfHotel(id);
             foreach (var room in roomsOfHotel)
             {
-                await _roomService.DeleteRoom(room.Id);
+                await _roomService.DeleteRoomWithHotel(room.Id);
             }
             await _roomService.SaveRoom();
-            _hotelRepository.Remove(hotelToDelete);
+
+            
 
 
+            //menejeris washla shezghudvebis gareshe
             var managerToDelete = await _managerService.GetManagerOfHotel(id);
-            await _managerService.DeleteManagerWithHotel(managerToDelete.Id);
-            await _managerService.SaveManager();
+            if(managerToDelete is not null)
+            {
+                await _managerService.DeleteManagerWithHotel(managerToDelete.Id);
+                await _managerService.SaveManager();
+
+            }
+
+            _hotelRepository.Remove(hotelToDelete);
 
         }
 
@@ -80,7 +90,7 @@ namespace Hotels.Service.Implementations
 
         public async Task<HotelGettingDto> GetSingleHotel(int id)
         {
-            Hotel hotel= await _hotelRepository.GetAsync(x=>x.Id == id, includeProperties:"Manager");
+            Hotel hotel= await _hotelRepository.GetAsync(x=>x.Id == id, includeProperties:"Manager,Rooms");
 
             var result  = _mapper.Map<HotelGettingDto>(hotel);
             return result;

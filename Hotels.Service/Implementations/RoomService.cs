@@ -108,6 +108,12 @@ namespace Hotels.Service.Implementations
 
 
         }
+
+        public async Task DeleteRoomWithHotel(int id)
+        {
+            var roomToDelete = await _roomRepository.GetAsync(x=>x.Id == id);  
+            _roomRepository.Remove(roomToDelete);
+        }
     }
    
 }

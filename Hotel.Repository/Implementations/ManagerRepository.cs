@@ -3,7 +3,6 @@ using Hotels.Repository.Data;
 using Hotels.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Hotels.Repository.Implementations
 {
     public class ManagerRepository : Repository<Manager>, IManagerRepository
@@ -14,6 +13,16 @@ namespace Hotels.Repository.Implementations
         {
             _context = context;
             
+        }
+
+        public async Task<List<string>> GetManagerPhoneNumbersAsync()
+        {
+            return await _context.Managers.Select(g => g.PhoneNumber).ToListAsync();
+        }
+
+        public async Task<List<string>> GetManagerIdNumbersAsync()
+        {
+            return await _context.Managers.Select(g => g.IdNumber).ToListAsync();
         }
 
         public async Task Save()

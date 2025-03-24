@@ -52,6 +52,7 @@ namespace Hotels.Service.Implementations
          
         }
 
+
         public async Task<ManagerGettingDto> GetManager(int id)
         {
             Manager manager= await _managerRepository.GetAsync(x=>x.Id==id);
@@ -65,6 +66,17 @@ namespace Hotels.Service.Implementations
             Manager manager = await _managerRepository.GetAsync(x => x.HotelId==hotelId);
 
             var result = _mapper.Map<ManagerGettingDto>(manager);
+            return result;
+        }
+        public async Task<List<string>> GetIdNumbersAsync()
+        {
+            var result = await _managerRepository.GetManagerIdNumbersAsync();
+            return result;
+        }
+
+        public async Task<List<string>> GetPhoneNumbersAsync()
+        {
+            var result = await _managerRepository.GetManagerPhoneNumbersAsync();
             return result;
         }
 

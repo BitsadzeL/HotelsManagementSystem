@@ -15,7 +15,7 @@ namespace Hotels.Repository.Implementations
 
         public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter, string includeProperties = null)
         {
-            IQueryable<T> query = _dbSet;
+            IQueryable<T> query = _dbSet.Where(filter); 
 
             if (!string.IsNullOrWhiteSpace(includeProperties))
             {
@@ -23,16 +23,11 @@ namespace Hotels.Repository.Implementations
                 {
                     query = query.Include(includeProperty);
                 }
-
-                return await query.ToListAsync();
             }
 
-            var entities = await query
-                .Where(filter)
-                .ToListAsync();
-
-            return entities;
+            return await query.ToListAsync(); 
         }
+
         public async Task<List<T>> GetAllAsync(string includeProperties = null)
         {
             if (!string.IsNullOrWhiteSpace(includeProperties))

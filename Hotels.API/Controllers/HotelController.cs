@@ -47,8 +47,7 @@ namespace Hotels.API.Controllers
         }
 
 
-        [HttpDelete("{id}")]
-        
+        [HttpDelete("{id}")]        
         public async Task<IActionResult> DeleteHotel([FromRoute] int id)
         {
             await _hotelService.DeleteHotel(id);

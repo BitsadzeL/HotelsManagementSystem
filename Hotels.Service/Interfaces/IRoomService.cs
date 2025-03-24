@@ -13,6 +13,7 @@ namespace Hotels.Service.Interfaces
         Task UpdateRoom(RoomUpdatingDto roomUpdatingDto);
         Task ChangeStatus(int roomId);
         Task DeleteRoom(int id);
+        Task DeleteRoomWithHotel(int id);
         Task SaveRoom();
     }
 }

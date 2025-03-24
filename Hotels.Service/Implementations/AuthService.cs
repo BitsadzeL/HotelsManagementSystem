@@ -18,6 +18,7 @@ namespace Hotels.Service.Implementations
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IMapper _mapper;
         private readonly IGuestService _guestService;
+        private readonly IManagerService _managerService;
 
         private const string _adminRole = "Admin";
         private const string _customerRole = "Customer";
@@ -30,7 +31,8 @@ namespace Hotels.Service.Implementations
             RoleManager<IdentityRole<int>> roleManager,
             IJwtTokenGenerator jwtTokenGenerator,
             IMapper mapper,
-            IGuestService guestService)
+            IGuestService guestService,
+            IManagerService managerService)
         {
             _context = context;
             _userManager = userManager;
@@ -38,6 +40,7 @@ namespace Hotels.Service.Implementations
             _mapper = mapper;
             _jwtTokenGenerator = jwtTokenGenerator;
             _guestService = guestService;
+            _managerService = managerService;
         }
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
@@ -170,6 +173,20 @@ namespace Hotels.Service.Implementations
         {
             var user = _mapper.Map<IdentityUser<int>>(managerRegistrationRequestDto);
 
+
+            //aqedan
+            var idNumber = managerRegistrationRequestDto.IdNumber;
+            var phoneNumber = managerRegistrationRequestDto.PhoneNumber;
+
+            var idNumbers = await _managerService.GetIdNumbersAsync();
+            var phoneNumbers = await _managerService.GetPhoneNumbersAsync();
+
+            if (idNumbers.Contains(idNumber) || phoneNumbers.Contains(phoneNumber))
+            {
+                throw new DuplicateException("User with this Id number or phone number already exists");
+            }
+
+            //aqamde
 
             var result = await _userManager.CreateAsync(user, managerRegistrationRequestDto.Password);
 
