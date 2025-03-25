@@ -5,6 +5,7 @@ using Hotels.Repository.Data;
 using Hotels.Repository.Interfaces;
 using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
+using Microsoft.Identity.Client;
 
 namespace Hotels.Service.Implementations
 {
@@ -12,17 +13,37 @@ namespace Hotels.Service.Implementations
     {
         private readonly IGuestRepository _guestRepository;
         private readonly IMapper _mapper;
-        //private readonly IAuthService _authService;
+        
 
         public GuestService(IGuestRepository guestRepository, IMapper mapper)
         {
             _guestRepository = guestRepository;
             _mapper = mapper;
-            //_authService=authService;
+            
         }
         public async Task AddGuest(GuestAddingDto guestAddingDto)
         {
             var obj=_mapper.Map<Guest>(guestAddingDto);
+
+            if (string.IsNullOrWhiteSpace(guestAddingDto.IdNumber))
+            {
+                throw new ArgumentException("ID number can not be empty or null");
+;            }
+
+            if (string.IsNullOrWhiteSpace(guestAddingDto.Name))
+            {
+                throw new ArgumentException("Name can not be empty or null");
+            }
+
+            if (string.IsNullOrWhiteSpace(guestAddingDto.Surname))
+            {
+                throw new ArgumentException("Surname can not be empty or null");
+            }
+
+            if (string.IsNullOrWhiteSpace(guestAddingDto.PhoneNumber))
+            {
+                throw new ArgumentException("Phone number can not be empty or null");
+            }
 
 
 
@@ -31,7 +52,18 @@ namespace Hotels.Service.Implementations
 
         public async Task DeleteGuest(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Guest id can not be negative or zero");
+            }
+
             var guestToRemove=await _guestRepository.GetAsync(x=>x.Id==id, includeProperties:"Bookings");
+            
+            if (guestToRemove is null)
+            {
+                throw new NotFoundException($"Guest with id {id} not found");
+            }
+
 
             if(guestToRemove.Bookings.Any())
             {
@@ -44,13 +76,27 @@ namespace Hotels.Service.Implementations
         public async Task<List<GuestGettingDto>> GetAllGuests()
         {
             List<Guest> guests= await _guestRepository.GetAllAsync(includeProperties:"Bookings");
+            if(guests is null)
+            {
+                throw new NotFoundException("there is no guest in database yet");
+            }
             var res=_mapper.Map<List<GuestGettingDto>>(guests);
             return res;
         }
 
         public async Task<GuestGettingDto> GetGuest(int id)
         {
+
+            if (id <= 0)
+            {
+                throw new ArgumentException("Guest id can not be negative or zero");
+            }
+
             var result = await _guestRepository.GetAsync(c=>c.Id==id);
+            if(result is null)
+            {
+                throw new NotFoundException($"Guest with id {id} not found");
+            }
             var obj = _mapper.Map<GuestGettingDto>(result);
             return obj;
         }

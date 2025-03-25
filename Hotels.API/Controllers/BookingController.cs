@@ -27,7 +27,7 @@ namespace Hotels.API.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("ofguest/{userId}")]
         public async Task<IActionResult> GetBookingsOfGuest(int userId)
         {
             var result = await _bookingService.GetBookingsOfUser(userId);
@@ -58,7 +58,7 @@ namespace Hotels.API.Controllers
 
 
         //stumris reservationebi
-        [HttpGet("ofguest/{guestid}")]
+        [HttpGet("reservations/ofguest/{guestid}")]
         public async Task<IActionResult> GetReservationsOfGuest([FromRoute] int guestId)
         {
             var result = await _bookingService.GetReservationsOfGuest(guestId);
