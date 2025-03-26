@@ -1,5 +1,6 @@
 ﻿using Hotels.Models.Dtos.Managers;
 using Hotels.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -7,6 +8,7 @@ namespace Hotels.API.Controllers
 {
     [ApiController]
     [Route("api/hotel/manager")]
+    [Authorize(Roles = "Admin")]
     public class ManagerController : Controller
     {
         private readonly IManagerService _managerService;
@@ -30,7 +32,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAllManagers([FromRoute] int id)
+        public async Task<IActionResult> GetManager([FromRoute] int id)
         {
             var result = await _managerService.GetManager(id);
 

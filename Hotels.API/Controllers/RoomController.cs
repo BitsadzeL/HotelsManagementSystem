@@ -1,6 +1,7 @@
 ﻿using Hotels.Models.Dtos.Reservations;
 using Hotels.Models.Dtos.Rooms;
 using Hotels.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotels.API.Controllers
@@ -19,6 +20,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllRooms()
         {
             var result = await _roomService.GetAllRooms();
@@ -49,6 +51,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> AddRoom([FromBody] RoomAddingDto roomAddingDto)
         {
             await _roomService.AddNewRoom(roomAddingDto);
@@ -60,6 +63,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> DeleteRoom([FromRoute] int id)
         {
             await _roomService.DeleteRoom(id);
@@ -72,6 +76,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> UpdateStatus([FromRoute] int id)
         {
             await _roomService.ChangeStatus(id);
@@ -83,25 +88,39 @@ namespace Hotels.API.Controllers
         }
 
 
-
-
-
-
-
-
-        [HttpPost("reservation")]
-        public async Task<IActionResult> AddReservation([FromBody] ReservationAddingDto reservationAddingDto)
+        [HttpPut]
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> UpdateRoom([FromBody] RoomUpdatingDto roomUpdatingDto)
         {
+            await _roomService.UpdateRoom(roomUpdatingDto);
+            await _roomService.SaveRoom();
 
-            await _reservationService.AddReservation(reservationAddingDto);
-            await _reservationService.SaveReservation();
-
-
-            ApiResponse response = new(ApiResponseMessage.SuccessMessage, reservationAddingDto, 201, isSuccess: true);
+            ApiResponse response = new(ApiResponseMessage.SuccessMessage, roomUpdatingDto, 204, isSuccess: true);
             return StatusCode(response.StatusCode, response);
+
         }
 
+
+
+
+
+
+
+
+        //[HttpPost("reservation")]
+        //public async Task<IActionResult> AddReservation([FromBody] ReservationAddingDto reservationAddingDto)
+        //{
+
+        //    await _reservationService.AddReservation(reservationAddingDto);
+        //    await _reservationService.SaveReservation();
+
+
+        //    ApiResponse response = new(ApiResponseMessage.SuccessMessage, reservationAddingDto, 201, isSuccess: true);
+        //    return StatusCode(response.StatusCode, response);
+        //}
+
         [HttpPut("reservation")]
+        [Authorize]
         public async Task<IActionResult> UpdateReservation([FromBody] ReservationUpdatingDto reservationUpdatingDto)
         {
             await _reservationService.UpdateReservation(reservationUpdatingDto);
@@ -112,6 +131,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpGet("{roomId}/reservation")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> getReservationsOfRoom([FromRoute] int roomId)
         {
             var result=await _reservationService.GetReservationsOfRoom(roomId);
@@ -121,7 +141,8 @@ namespace Hotels.API.Controllers
         }
 
         [HttpGet("reservation")]
-        public async Task<IActionResult> getAllReservations([FromRoute] int roomId)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> getAllReservations()
         {
             var result = await _reservationService.GetAllReservations();
 
@@ -131,6 +152,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpGet("reservation/{id}")]
+        [Authorize]
         public async Task<IActionResult> getReservation([FromRoute] int id)
         {
             var result = await _reservationService.GetReservation(id);
@@ -140,6 +162,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpDelete("reservation/{id}")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> DeleteReservation([FromRoute] int id)
         {
             await _reservationService.DeleteReservation(id);

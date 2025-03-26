@@ -21,17 +21,18 @@ namespace Hotels.API.Controllers
 
 
 
-        [HttpPost]
-        public async Task<IActionResult> AddGuest(GuestAddingDto guestAddingDto)
-        {
-            await _guestService.AddGuest(guestAddingDto);
-            await _guestService.SaveGuest();
+        //[HttpPost]
+        //public async Task<IActionResult> AddGuest(GuestAddingDto guestAddingDto)
+        //{
+        //    await _guestService.AddGuest(guestAddingDto);
+        //    await _guestService.SaveGuest();
 
-            ApiResponse response = new(ApiResponseMessage.SuccessMessage, guestAddingDto, 201, isSuccess: true);
-            return StatusCode(response.StatusCode, response);
-        }
+        //    ApiResponse response = new(ApiResponseMessage.SuccessMessage, guestAddingDto, 201, isSuccess: true);
+        //    return StatusCode(response.StatusCode, response);
+        //}
         
         [HttpGet]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> GetAllGuests()
         {
             var result = await _guestService.GetAllGuests();
@@ -40,6 +41,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> getGuest([FromRoute] int id)
         {
             var result = await _guestService.GetGuest(id);
@@ -50,6 +52,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateGuest([FromBody] GuestUpdatingDto guestUpdatingDto)
         {
             await _modifyUserService.UpdateGuest(guestUpdatingDto);
@@ -62,6 +65,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteGuest([FromRoute] int id)
         {
             await _modifyUserService.DeleteGuest(id);

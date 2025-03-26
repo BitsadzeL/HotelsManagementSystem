@@ -1,4 +1,5 @@
 ﻿using Hotels.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotels.API.Controllers
@@ -19,6 +20,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllBookings()
         {
             var result= await _bookingService.GetAllBookings();
@@ -28,6 +30,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpGet("ofguest/{userId}")]
+        [Authorize]
         public async Task<IActionResult> GetBookingsOfGuest(int userId)
         {
             var result = await _bookingService.GetBookingsOfUser(userId);
@@ -37,6 +40,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpGet("completed")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> GetCompletedReservations()
         {
             var result = await _reservationService.GetCompletedReservations();
@@ -47,6 +51,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpGet("active")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> GetActiveReservations()
         {
             var result = await _reservationService.GetActiveReservations();
@@ -59,6 +64,7 @@ namespace Hotels.API.Controllers
 
         //stumris reservationebi
         [HttpGet("reservations/ofguest/{guestid}")]
+        [Authorize]
         public async Task<IActionResult> GetReservationsOfGuest([FromRoute] int guestId)
         {
             var result = await _bookingService.GetReservationsOfGuest(guestId);
@@ -68,6 +74,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpGet("filterbydate")]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> FilteByDate([FromQuery] DateTime? start,  [FromQuery] DateTime? end)
         {
             var result = await _reservationService.GetReservationsWithDate(start, end);
@@ -80,6 +87,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> AddBooking(BookingWithReservationAddingDto bookingWithReservationDto)
         {
             await _bookingService.AddBooking(bookingWithReservationDto);
@@ -91,17 +99,18 @@ namespace Hotels.API.Controllers
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
-        {
-            await _bookingService.DeleteBooking(id);
-            await _reservationService.SaveReservation();
-            await _bookingService.SaveBooking();
+        //[HttpDelete("{id}")]
+        //[Authorize]
+        //public async Task<IActionResult> DeleteBooking(int id)
+        //{
+        //    await _bookingService.DeleteBooking(id);
+        //    await _reservationService.SaveReservation();
+        //    await _bookingService.SaveBooking();
 
             
-            ApiResponse response = new(ApiResponseMessage.SuccessMessage, id, 204, isSuccess: true);
-            return StatusCode(response.StatusCode, response);
-        }
+        //    ApiResponse response = new(ApiResponseMessage.SuccessMessage, id, 204, isSuccess: true);
+        //    return StatusCode(response.StatusCode, response);
+        //}
 
 
     }

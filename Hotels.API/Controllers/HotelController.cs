@@ -1,8 +1,6 @@
-﻿using Hotels.Models.Dtos.Guests;
-using Hotels.Models.Dtos.Hotel;
+﻿using Hotels.Models.Dtos.Hotel;
 using Hotels.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotels.API.Controllers
@@ -18,7 +16,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> AddHotel([FromBody] HotelAddingDto model)
         {
             await _hotelService.AddNewHotel(model);
@@ -47,7 +45,8 @@ namespace Hotels.API.Controllers
         }
 
 
-        [HttpDelete("{id}")]        
+        [HttpDelete("{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> DeleteHotel([FromRoute] int id)
         {
             await _hotelService.DeleteHotel(id);
@@ -58,7 +57,7 @@ namespace Hotels.API.Controllers
         }
 
         [HttpPut]
-        
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateHotel([FromBody] HotelUpdatingDto model)
         {
             await _hotelService.UpdateHotel(model);
@@ -67,6 +66,7 @@ namespace Hotels.API.Controllers
             ApiResponse response = new(ApiResponseMessage.SuccessMessage, model, 200, isSuccess: true);
             return StatusCode(response.StatusCode, response);
         }
+
 
         [HttpGet("filter")]
         public async Task<IActionResult> FilterHotels(string? country, string? city, float? rating)

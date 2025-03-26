@@ -2,6 +2,7 @@
 using Hotels.Models.Dtos.Identity;
 using Hotels.Models.Dtos.Managers;
 using Hotels.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hotels.API.Controllers
@@ -46,6 +47,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpPost("registermanager")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterManager([FromForm] ManagerRegistrationDto managerRegistrationDto)
         {
             var result= await _authService.RegisterManager(managerRegistrationDto);
@@ -71,6 +73,7 @@ namespace Hotels.API.Controllers
 
 
         [HttpPost("registeradmin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin([FromForm] AdminRegistrationDto adminRegistrationDto)
         {
             await _authService.RegisterAdmin(adminRegistrationDto);

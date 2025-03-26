@@ -39,6 +39,11 @@ namespace Hotels.Service.Implementations
         {
             var roomToDelete = await _roomRepository.GetAsync(x => x.Id == id, includeProperties:"Reservations");
 
+            if(roomToDelete is null)
+            {
+                throw new NotFoundException($"Room not found with id {id}");
+            }
+
             if(roomToDelete.Reservations.Any())
             {
                 throw new DeletionNotAllowedException("Room has active reservations. Unable to delete");
@@ -95,14 +100,26 @@ namespace Hotels.Service.Implementations
             await _roomRepository.Save();
         }
 
-        public Task UpdateRoom(RoomUpdatingDto roomUpdatingDto)
+        public async Task UpdateRoom(RoomUpdatingDto roomUpdatingDto)
         {
-            throw new NotImplementedException();
+            var roomToUpdate = await _roomRepository.GetAsync(x=>x.Id == roomUpdatingDto.Id);
+
+            if(roomToUpdate is null)
+            {
+                throw new NotFoundException("Updating wrong room");
+            }
+
+            var obj = _mapper.Map(roomUpdatingDto, roomToUpdate);
+            await _roomRepository.Update(obj);
         }
 
         public async Task ChangeStatus(int roomId)
         {
             var roomToChange = await _roomRepository.GetAsync(x=>x.Id == roomId);
+            if(roomToChange is null)
+            {
+                throw new NotFoundException($"Room with id {roomId} not found");
+            }
 
             roomToChange.IsFree = !roomToChange.IsFree;
 
