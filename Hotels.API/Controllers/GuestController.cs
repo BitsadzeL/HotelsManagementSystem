@@ -11,10 +11,12 @@ namespace Hotels.API.Controllers
     public class GuestController : Controller       
     {
         private readonly IGuestService _guestService;
+        private readonly IModifyUserService _modifyUserService;
 
-        public GuestController(IGuestService guestService)
+        public GuestController(IGuestService guestService, IModifyUserService modifyUserService)
         {
-            _guestService= guestService;
+            _guestService = guestService;
+            _modifyUserService = modifyUserService;
         }
 
 
@@ -50,7 +52,7 @@ namespace Hotels.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateGuest([FromBody] GuestUpdatingDto guestUpdatingDto)
         {
-            await _guestService.UpdateGuest(guestUpdatingDto);
+            await _modifyUserService.UpdateGuest(guestUpdatingDto);
             await _guestService.SaveGuest();
 
 
@@ -62,7 +64,8 @@ namespace Hotels.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGuest([FromRoute] int id)
         {
-            await _guestService.DeleteGuest(id);
+            await _modifyUserService.DeleteGuest(id);
+            await _modifyUserService.DeleteIdentityUser(id);
             await _guestService.SaveGuest();
 
             ApiResponse response = new(ApiResponseMessage.SuccessMessage, id, 204, isSuccess: true);

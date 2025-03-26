@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace Hotels.Models.Dtos.Managers
+﻿namespace Hotels.Models.Dtos.Managers
 {
     public class ManagerUpdatingDto
     {

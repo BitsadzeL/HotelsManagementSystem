@@ -29,10 +29,15 @@ namespace Hotels.Service.Implementations
         public async Task DeleteManager(int id)
         {
             var managerToDelete = await _managerRepository.GetAsync(x => x.Id == id, includeProperties:"Hotel");
-            if(managerToDelete.Hotel is not null)
+            if(managerToDelete is null)
             {
-                throw new DeletionNotAllowedException("Manager manages hotel. You can not delete it");
+                throw new NotFoundException($"Manager with id {id} was not found");
             }
+
+            //if(managerToDelete.Hotel is not null)
+            //{
+            //    throw new DeletionNotAllowedException("Manager manages hotel. You can not delete it");
+            //}
 
             _managerRepository.Remove(managerToDelete);
         }
@@ -55,7 +60,17 @@ namespace Hotels.Service.Implementations
 
         public async Task<ManagerGettingDto> GetManager(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException($"manager id can not be negative or zero");
+            }
+
             Manager manager= await _managerRepository.GetAsync(x=>x.Id==id);
+
+            if(manager is null)
+            {
+                throw new NotFoundException($"Manager with id {id} was not found");
+            }
 
             var result=_mapper.Map<ManagerGettingDto>(manager);
             return result;
@@ -64,6 +79,11 @@ namespace Hotels.Service.Implementations
         public async Task<ManagerGettingDto> GetManagerOfHotel(int hotelId)
         {
             Manager manager = await _managerRepository.GetAsync(x => x.HotelId==hotelId);
+
+            if(manager is null)
+            {
+                throw new NotFoundException($"Manager for hotel with id {hotelId} was not found or hotel does not exist");
+            }
 
             var result = _mapper.Map<ManagerGettingDto>(manager);
             return result;
@@ -90,6 +110,12 @@ namespace Hotels.Service.Implementations
             var ManagerToUpdate = await _managerRepository.GetAsync(x => x.Id == managerUpdatingDto.Id);
             var obj = _mapper.Map(managerUpdatingDto, ManagerToUpdate);
             await _managerRepository.Update(obj);
+        }
+
+        public async Task<List<int>> GetHotelsWithManagerAsync()
+        {
+            var result = await _managerRepository.GetHotelsWithManagerAsync();
+            return result;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Hotels.Service.Interfaces
         Task<List<ManagerGettingDto>> GetAllManagers();
         Task<List<string>> GetPhoneNumbersAsync();
         Task<List<string>> GetIdNumbersAsync();
+        Task<List<int>> GetHotelsWithManagerAsync();
 
         Task AddNewManager(ManagerAddingDto managerAddingDto);
         Task UpdateManager(ManagerUpdatingDto managerUpdatingDto);

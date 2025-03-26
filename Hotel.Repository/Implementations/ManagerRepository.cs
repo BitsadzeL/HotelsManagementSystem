@@ -44,5 +44,15 @@ namespace Hotels.Repository.Implementations
                 entityFromDb.HotelId = entity.HotelId;
             }
         }
+
+        public async Task<List<int>> GetHotelsWithManagerAsync()
+        {
+            var result = await _context.Managers
+                .Where(m => m.HotelId.HasValue)  
+                .Select(m => m.HotelId.Value)    
+                .ToListAsync();
+            return result;
+        }
+
     }
 }

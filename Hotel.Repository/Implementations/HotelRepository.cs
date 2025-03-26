@@ -14,6 +14,12 @@ namespace Hotels.Repository.Implementations
             _context = context;
         }
 
+        public async Task<List<int>> GetHotelIdsAsync()
+        {
+            var result = await _context.Hotels.Select(h => h.Id).ToListAsync();
+            return result;
+        }
+
         public async Task Save()
         {
             await _context.SaveChangesAsync();

@@ -6,5 +6,6 @@ namespace Hotels.Repository.Interfaces
     {
         Task<List<string>> GetManagerPhoneNumbersAsync();
         Task<List<string>> GetManagerIdNumbersAsync();
+        Task<List<int>> GetHotelsWithManagerAsync();
     }
 }

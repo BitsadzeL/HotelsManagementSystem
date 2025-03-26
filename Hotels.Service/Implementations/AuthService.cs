@@ -5,7 +5,7 @@ using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+
 
 namespace Hotels.Service.Implementations
 {
@@ -19,6 +19,7 @@ namespace Hotels.Service.Implementations
         private readonly IMapper _mapper;
         private readonly IGuestService _guestService;
         private readonly IManagerService _managerService;
+        private readonly IHotelService _hotelService;
 
         private const string _adminRole = "Admin";
         private const string _customerRole = "Customer";
@@ -32,7 +33,8 @@ namespace Hotels.Service.Implementations
             IJwtTokenGenerator jwtTokenGenerator,
             IMapper mapper,
             IGuestService guestService,
-            IManagerService managerService)
+            IManagerService managerService,
+            IHotelService hotelService)
         {
             _context = context;
             _userManager = userManager;
@@ -41,6 +43,7 @@ namespace Hotels.Service.Implementations
             _jwtTokenGenerator = jwtTokenGenerator;
             _guestService = guestService;
             _managerService = managerService;
+            _hotelService = hotelService;
         }
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
@@ -177,14 +180,30 @@ namespace Hotels.Service.Implementations
             //aqedan
             var idNumber = managerRegistrationRequestDto.IdNumber;
             var phoneNumber = managerRegistrationRequestDto.PhoneNumber;
+            var hotelId = managerRegistrationRequestDto.HotelId;
 
             var idNumbers = await _managerService.GetIdNumbersAsync();
             var phoneNumbers = await _managerService.GetPhoneNumbersAsync();
+            var hotelsWithManagers = await _managerService.GetHotelsWithManagerAsync();
+            var existingHotels = await _hotelService.GetHotelIds();
 
             if (idNumbers.Contains(idNumber) || phoneNumbers.Contains(phoneNumber))
             {
                 throw new DuplicateException("User with this Id number or phone number already exists");
             }
+
+            if (hotelId.HasValue && !existingHotels.Contains(hotelId.Value))
+            {
+                throw new DuplicateException("This hotel does not exist");
+            }
+
+            if (hotelId.HasValue && hotelsWithManagers.Contains(hotelId.Value))
+            {
+                throw new DuplicateException("This hotel already has a manager, cannot assign another manager to this hotel.");
+            }
+
+
+
 
             //aqamde
 

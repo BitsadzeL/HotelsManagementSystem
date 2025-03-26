@@ -23,12 +23,11 @@ namespace Hotels.Service.Implementations
         }
         public async Task AddGuest(GuestAddingDto guestAddingDto)
         {
-            var obj=_mapper.Map<Guest>(guestAddingDto);
 
             if (string.IsNullOrWhiteSpace(guestAddingDto.IdNumber))
             {
                 throw new ArgumentException("ID number can not be empty or null");
-;            }
+            }
 
             if (string.IsNullOrWhiteSpace(guestAddingDto.Name))
             {
@@ -47,6 +46,7 @@ namespace Hotels.Service.Implementations
 
 
 
+            var obj=_mapper.Map<Guest>(guestAddingDto);
             await _guestRepository.AddAsync(obj);
         }
 

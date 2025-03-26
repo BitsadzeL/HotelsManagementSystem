@@ -123,8 +123,8 @@ namespace University.Repository.Data
                 entity
                     .HasOne(m => m.Hotel)
                     .WithOne(h => h.Manager)
-                    .HasForeignKey<Manager>(m => m.HotelId);
-
+                    .HasForeignKey<Manager>(m => m.HotelId)
+                    .OnDelete(DeleteBehavior.SetNull);
 
 
 

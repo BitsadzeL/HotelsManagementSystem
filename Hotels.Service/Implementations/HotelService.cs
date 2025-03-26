@@ -2,6 +2,7 @@
 using Hotels.Models.Dtos.Hotel;
 using Hotels.Models.Entities;
 using Hotels.Repository.Interfaces;
+using Hotels.Service.Exceptions;
 using Hotels.Service.Interfaces;
 using Microsoft.Identity.Client;
 using System.Linq.Expressions;
@@ -40,17 +41,31 @@ namespace Hotels.Service.Implementations
 
         public async Task DeleteHotel(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Hotel id can not be negative or zero");
+            }
+
             var hotelToDelete= await _hotelRepository.GetAsync(x=>x.Id==id);
+
+            if(hotelToDelete is null)
+            {
+                throw new NotFoundException($"Hotel with id {id} was not found");
+            }
 
 
             //sastumros otaxebis wamogheba da am otaxebis washla miuxedavad imisa aqvs tu ara javshani
             //var roomsOfHotel = await _roomRepository.GetAllAsync(x=>x.HotelId == id, includeProperties:"Reservations");
             var roomsOfHotel = await _roomService.GetAllRoomsOfHotel(id);
-            foreach (var room in roomsOfHotel)
+            if(roomsOfHotel is not null)
             {
-                await _roomService.DeleteRoomWithHotel(room.Id);
+                foreach (var room in roomsOfHotel)
+                {
+                    await _roomService.DeleteRoomWithHotel(room.Id);
+                }
+                await _roomService.SaveRoom();
+
             }
-            await _roomService.SaveRoom();
 
             
 
@@ -86,6 +101,12 @@ namespace Hotels.Service.Implementations
             List<Hotel> result = await _hotelRepository.GetAllAsync(includeProperties:"Manager,Rooms");
             var obj = _mapper.Map<List<HotelGettingDto>>(result);
             return obj;
+        }
+
+        public async Task<List<int>> GetHotelIds()
+        {
+            var result = await _hotelRepository.GetHotelIdsAsync();
+            return result;
         }
 
         public async Task<HotelGettingDto> GetSingleHotel(int id)
