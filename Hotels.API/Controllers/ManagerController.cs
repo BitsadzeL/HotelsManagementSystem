@@ -10,10 +10,14 @@ namespace Hotels.API.Controllers
     public class ManagerController : Controller
     {
         private readonly IManagerService _managerService;
+        private readonly IModifyUserService _modifyUserService;
+        private readonly IAuthService _authService;
 
-        public ManagerController(IManagerService managerService)
+        public ManagerController(IManagerService managerService, IModifyUserService modifyUserService, IAuthService authService)
         {
             _managerService = managerService;
+            _modifyUserService = modifyUserService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -49,7 +53,9 @@ namespace Hotels.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateManager([FromBody] ManagerUpdatingDto managerUpdatingDto)
         {
-            await _managerService.UpdateManager(managerUpdatingDto);
+            
+            await _modifyUserService.UpdateManager(managerUpdatingDto);
+            await _authService.UpdateUserEmail(managerUpdatingDto.Id, managerUpdatingDto.Email);
             await _managerService.SaveManager();
 
 

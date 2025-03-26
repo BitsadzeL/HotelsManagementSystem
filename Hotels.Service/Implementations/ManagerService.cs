@@ -117,5 +117,11 @@ namespace Hotels.Service.Implementations
             var result = await _managerRepository.GetHotelsWithManagerAsync();
             return result;
         }
+
+        public async Task<List<string>> GetEmailsAsync()
+        {
+            var result = await _managerRepository.GetManagerEmailsAsync();
+            return result;
+        }
     }
 }

@@ -54,5 +54,9 @@ namespace Hotels.Repository.Implementations
             return result;
         }
 
+        public async Task<List<string>> GetManagerEmailsAsync()
+        {
+            return await _context.Managers.Select(g => g.Email).ToListAsync();
+        }
     }
 }

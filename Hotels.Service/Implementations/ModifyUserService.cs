@@ -84,9 +84,33 @@ namespace Hotels.Service.Implementations
 
         }
 
-        public Task UpdateManager(ManagerUpdatingDto managerUpdatingDto)
+        public async Task UpdateManager(ManagerUpdatingDto managerUpdatingDto)
         {
-            throw new NotImplementedException();
+            var userToUpdate = await _managerService.GetManager(managerUpdatingDto.Id);
+            if (userToUpdate is null)
+            {
+                throw new NotFoundException($"Manager with id {managerUpdatingDto.Id} was not found");
+            }
+
+            var managerIdNumber = managerUpdatingDto.IdNumber;
+            var managerPhoneNumber = managerUpdatingDto.PhoneNumber;
+            var managerEmail = managerUpdatingDto.Email;
+
+            var Ids = await _managerService.GetIdNumbersAsync();
+            Ids.Remove(userToUpdate.IdNumber);
+
+            var phoneNumbers = await _managerService.GetPhoneNumbersAsync();
+            phoneNumbers.Remove(userToUpdate.PhoneNumber);
+
+            var emails = await _managerService.GetEmailsAsync();
+            emails.Remove(userToUpdate.Email);
+
+            if (phoneNumbers.Contains(managerPhoneNumber) || Ids.Contains(managerIdNumber) || emails.Contains(managerEmail))
+            {
+                throw new DuplicateException("User with this phone number,ID number or email already exists.");
+            }
+
+            await _managerService.UpdateManager(managerUpdatingDto);
         }
     }
 }

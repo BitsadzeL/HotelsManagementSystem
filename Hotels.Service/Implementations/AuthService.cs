@@ -262,5 +262,19 @@ namespace Hotels.Service.Implementations
                 throw new Exception($"Failed to delete user: {errors}");
             }
         }
+
+
+        public async Task UpdateUserEmail(int userId, string newEmail)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                throw new NotFoundException($"User with ID {userId} not found.");
+            }
+
+            await _userManager.SetEmailAsync(user, newEmail);
+            await _userManager.SetUserNameAsync(user, newEmail);
+        }
+
     }
 }
